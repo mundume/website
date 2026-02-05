@@ -1,28 +1,40 @@
-import { Icon } from "@/components/icons"
-import type React from "react"
+import { Icon } from "@/components/icons";
+import type React from "react";
 
-interface McpConnectivityIllustrationProps {
-  className?: string
+interface MiddlewareProps {
+  className?: string;
 }
 
-const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = ({ className = "" }) => {
-  // Integration data with new SVG paths
-  const integrations = [
-    { name: "Figma", icon: "/images/mcp-integrations/figma.svg", installed: true },
-    { name: "Shadcn UI", icon: "/images/mcp-integrations/shadcn.svg" },
-    { name: "Next.js", icon: "/images/mcp-integrations/nextjs.svg", installed: true },
-    { name: "Tailwind CSS", icon: "/images/mcp-integrations/tailwind-css.svg" },
-    { name: "Resend", icon: "/images/mcp-integrations/resend.svg", installed: true },
-    { name: "React", icon: "/images/mcp-integrations/react.svg" },
-  ]
+const Middleware: React.FC<MiddlewareProps> = ({ className = "" }) => {
+  const layers = [
+    {
+      name: "Retries",
+      icon: "/images/features/retries.svg",
+      installed: true,
+    },
+    { name: "Prometheus", icon: "/images/features/prometheus.svg" },
+    {
+      name: "Sentry",
+      icon: "/images/features/sentry.svg",
+      installed: true,
+    },
+    { name: "Tracing", icon: "/images/features/tracing.svg" },
+    {
+      name: "CatchPanic",
+      icon: "/images/features/catch-panics.svg",
+      installed: true,
+    },
+    { name: "Parallelize", icon: "/images/features/parallelize.svg" },
+    { name: "Circuit Breaker", icon: "/images/features/circuit-breaker.svg" },
+    { name: "Long Running", icon: "/images/features/long-running.svg" },
+  ];
 
   return (
     <div
       className={`w-full h-full flex items-center justify-center p-4 relative ${className}`}
       role="img"
-      aria-label="MCP Connectivity component showcasing installed integrations list"
+      aria-label="Middleware component showcasing available integrations list"
     >
-      {/* Main Message Box */}
       <div
         style={{
           position: "absolute",
@@ -31,7 +43,8 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
           transform: "translate(-50%, calc(-50% + 24px))",
           width: "345px",
           height: "277px",
-          background: "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 100%)",
+          background:
+            "linear-gradient(180deg, hsl(var(--background)) 0%, transparent 100%)",
           backdropFilter: "blur(16px)",
           borderRadius: "9.628px",
           border: "0.802px solid hsl(var(--border))",
@@ -66,11 +79,15 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                 flexShrink: 0,
               }}
             >
-              <Icon name="search" className="w-full h-full text-muted-foreground" />
+              <Icon
+                name="search"
+                className="w-full h-full text-muted-foreground"
+              />
             </div>
             <span
               style={{
-                fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                fontFamily:
+                  "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
                 fontSize: "12.837px",
                 lineHeight: "19.256px",
                 color: "hsl(var(--muted-foreground))",
@@ -78,19 +95,22 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                 whiteSpace: "nowrap",
               }}
             >
-              Search for servers
+              Search for Middleware
             </span>
           </div>
           {/* Integration List */}
-          {integrations.map((integration, index) => (
+          {layers.map((layers, index) => (
             <div
-              key={integration.name}
+              key={layers.name}
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "8.826px 12.837px",
-                borderBottom: index < integrations.length - 1 ? "0.479px solid hsl(var(--border))" : "none",
+                borderBottom:
+                  index < layers.length - 1
+                    ? "0.479px solid hsl(var(--border))"
+                    : "none",
                 width: "100%",
                 boxSizing: "border-box",
               }}
@@ -114,14 +134,15 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                   }}
                 >
                   <img
-                    src={integration.icon || "/placeholder.svg"}
-                    alt={integration.name}
+                    src={layers.icon || "/placeholder.svg"}
+                    alt={layers.name}
                     className="w-full h-full object-contain opacity-70 grayscale" // Apply opacity and grayscale
                   />
                 </div>
                 <span
                   style={{
-                    fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                    fontFamily:
+                      "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
                     fontSize: "12.837px",
                     lineHeight: "19.256px",
                     color: "hsl(var(--muted-foreground))",
@@ -129,10 +150,10 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {integration.name}
+                  {layers.name}
                 </span>
               </div>
-              {integration.installed && (
+              {layers.installed && (
                 <div
                   style={{
                     background: "hsl(var(--primary) / 0.08)",
@@ -145,7 +166,8 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                 >
                   <span
                     style={{
-                      fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                      fontFamily:
+                        "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
                       fontSize: "9.583px",
                       lineHeight: "15.333px",
                       color: "hsl(var(--primary))",
@@ -153,7 +175,7 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
                       whiteSpace: "nowrap",
                     }}
                   >
-                    Installed
+                    Enabled
                   </span>
                 </div>
               )}
@@ -162,7 +184,7 @@ const McpConnectivityIllustration: React.FC<McpConnectivityIllustrationProps> = 
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default McpConnectivityIllustration
+export default Middleware;

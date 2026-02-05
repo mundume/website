@@ -1,7 +1,7 @@
 import AiCodeReviews from "./features/ai-code-reviews"
 import RealtimeCodingPreviews from "./features/real-time-previews"
-import OneClickIntegrationsIllustration from "./features/one-click-integrations-illustration"
-import MCPConnectivityIllustration from "./features/mcp-connectivity-illustration" // Updated import
+import CompatibleServices from "./features/compatible-services"
+import MCPConnectivityIllustration from "./features/middleware" // Updated import
 import EasyDeployment from "./features/easy-deployment"
 import ParallelCodingAgents from "./features/parallel-agents" // Updated import
 
@@ -34,33 +34,33 @@ const FeatureCard = ({ title, description, Component }) => (
 export function Features() {
     const cards = [
         {
-            title: "AI-powered code reviews.",
-            description: "Get real-time, smart suggestions for cleaner code.",
+            title: "Functional",
+            description: "Offers a functional programming approach to background task processing.",
             Component: AiCodeReviews,
         },
         {
-            title: "Real-time coding previews",
-            description: "Chat, collaborate, and instantly preview changes together.",
+            title: "Web-based UI",
+            description: "Intuitive web interface for managing and monitoring background tasks.",
             Component: RealtimeCodingPreviews,
         },
         {
-            title: "One-click integrations",
-            description: "Easily connect your workflow with popular dev tools.",
-            Component: OneClickIntegrationsIllustration,
+            title: "Compatible with popular backends",
+            description: "Easily connect your projects to databases and services.",
+            Component: CompatibleServices,
         },
         {
-            title: "Flexible MCP connectivity",
-            description: "Effortlessly manage and configure MCP server access.",
+            title: "Flexible Middleware",
+            description: "Provides middleware support build on top of tower",
             Component: MCPConnectivityIllustration, // Updated component
         },
         {
-            title: "Launch parallel coding agents", // Swapped position
-            description: "Solve complex problems faster with multiple AI agents.",
+            title: "Workflow Orchestration", // Swapped position
+            description: "Coordinate complex background tasks with ease.",
             Component: ParallelCodingAgents, // Updated component
         },
         {
-            title: "Deployment made easy", // Swapped position
-            description: "Go from code to live deployment on Vercel instantly.",
+            title: "Observability", // Swapped position
+            description: "Gain insights into your background processes with built-in instrumentation.",
             Component: EasyDeployment,
         },
     ]
