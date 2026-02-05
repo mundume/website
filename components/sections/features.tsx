@@ -1,4 +1,4 @@
-import AiCodeReviews from "./features/ai-code-reviews"
+import FunctionalApproach from "./features/functional"
 import RealtimeCodingPreviews from "./features/real-time-previews"
 import CompatibleServices from "./features/compatible-services"
 import MCPConnectivityIllustration from "./features/middleware" // Updated import
@@ -35,8 +35,8 @@ export function Features() {
     const cards = [
         {
             title: "Functional",
-            description: "Offers a functional programming approach to background task processing.",
-            Component: AiCodeReviews,
+            description: "Functional programming approach with dependency injection with no macros.",
+            Component: FunctionalApproach,
         },
         {
             title: "Web-based UI",
@@ -51,16 +51,16 @@ export function Features() {
         {
             title: "Flexible Middleware",
             description: "Provides middleware support build on top of tower",
-            Component: MCPConnectivityIllustration, // Updated component
+            Component: MCPConnectivityIllustration,
         },
         {
-            title: "Workflow Orchestration", // Swapped position
+            title: "Workflow Orchestration", 
             description: "Coordinate complex background tasks with ease.",
-            Component: ParallelCodingAgents, // Updated component
+            Component: ParallelCodingAgents,
         },
         {
-            title: "Observability", // Swapped position
-            description: "Gain insights into your background processes with built-in instrumentation.",
+            title: "Observability",
+            description: "Gain insights into your background tasks with built-in instrumentation.",
             Component: EasyDeployment,
         },
     ]

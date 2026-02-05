@@ -4,7 +4,10 @@ import { FC, useState } from "react"
 import * as Tabs from "@radix-ui/react-tabs"
 import { track } from "@vercel/analytics"
 import hljs from "highlight.js/lib/common"
+import rust from 'highlight.js/lib/languages/rust';
 import { Icon } from "../icons"
+
+hljs.registerLanguage('rust', rust);
 
 export const Code: FC<{
   tabs: {

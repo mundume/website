@@ -21,30 +21,27 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
     "--deploy-border-color": "hsl(var(--border))",
   } as React.CSSProperties
 
-  /* ------------------------------------------------------------
-   * Console log output (static for demo) – can be replaced via props
-   * ---------------------------------------------------------- */
   const logLines = [
-    "[16:37:25.637] Running build in Washington, D.C., USA (East) – iad1",
-    "[16:37:25.638] Build machine configuration: 2 cores, 8 GB",
-    "[16:37:25.653] Retrieving list of deployment files...",
-    "[16:37:25.741] Previous build caches not available",
-    "[16:37:25.979] Downloading 84 deployment files...",
-    '[16:37:29.945] Running "vercel build"',
-    "[16:37:30.561] Vercel CLI 44.5.0",
-    '[16:37:30.880] Running "install" command: `bun install`...',
-    "[16:37:30.914] bun install v1.2.19 (aad3abea)",
-    "[16:37:30.940] Resolving dependencies",
-    "[16:37:34.436] Resolved, downloaded and extracted [1116]",
-    '[16:37:34.436] warn: incorrect peer dependency "react@19.1.0"',
-    "[16:37:37.265] Saved lockfile",
-    "[16:37:39.076] Next.js anonymous telemetry notice",
-    "[16:37:39.137] ▲ Next.js 15.2.4",
-    "[16:37:41.439] ✓ Compiled successfully",
-    "[16:37:53.979] ✓ Generated static pages",
-    "[16:38:00.585] ○ (Static) prerendered as static content",
-    "[16:38:01.099] Build Completed in /vercel/output [30s]",
-    "🚀 Deployment complete – Easy!",
+    "[16:37:25.637] Initializing email service...",
+    "[16:37:25.638] Connecting to SMTP server (smtp.gmail.com:587)",
+    "[16:37:25.653] Authenticating with credentials...",
+    "[16:37:25.741] ✓ Successfully authenticated",
+    "[16:37:25.979] Preparing email message...",
+    '[16:37:29.945] Setting recipients: "user@example.com"',
+    "[16:37:30.561] Subject: Project Update - Q1 2026",
+    '[16:37:30.880] Attaching files: "report.pdf" (2.4 MB)...',
+    "[16:37:30.914] Validating email content...",
+    "[16:37:30.940] Encoding attachments",
+    "[16:37:34.436] ✓ Attachment encoded successfully",
+    '[16:37:34.436] Adding CC: "team@example.com"',
+    "[16:37:37.265] Composing MIME message",
+    "[16:37:39.076] Message size: 2.6 MB",
+    "[16:37:39.137] ▶ Sending email...",
+    "[16:37:41.439] ✓ Message accepted by server",
+    "[16:37:53.979] ✓ Delivery confirmed",
+    "[16:38:00.585] Message-ID: <abc123@mail.example.com>",
+    "[16:38:01.099] Email sent successfully [35s]",
+    "📧 Email delivered – Message sent!",
   ]
 
   return (
@@ -119,38 +116,6 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
           }}
         />
       </div>
-
-      {/* -------------------------------------------------------- */}
-      {/* Call-to-action button                                   */}
-      {/* -------------------------------------------------------- */}
-      <button
-        style={{
-          position: "absolute",
-          top: "calc(50% + 57.6px)",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "6.375px",
-          padding: "5.1px 10.2px",
-          background: "var(--deploy-primary-color)",
-          color: "hsl(var(--primary-foreground))",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "8.925px",
-          fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          fontSize: "16.575px",
-          lineHeight: "25.5px",
-          letterSpacing: "-0.51px",
-          fontWeight: 500,
-          whiteSpace: "nowrap",
-          boxShadow:
-            "0px 42.075px 11.475px rgba(0, 0, 0, 0), 0px 26.775px 10.2px rgba(0, 0, 0, 0.01), 0px 15.3px 8.925px rgba(0, 0, 0, 0.05), 0px 6.375px 6.375px rgba(0, 0, 0, 0.09), 0px 1.275px 3.825px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        🚀 Deploy on Vercel
-      </button>
     </div>
   )
 }

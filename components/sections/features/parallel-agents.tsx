@@ -108,6 +108,13 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
       model: "o3",
       branch: "pointer/update-pain...",
     },
+    {
+      icon: <SparklesIcon />,
+      title: "Plan for seamless toast",
+      tokens: "30k tokens",
+      model: "o3",
+      branch: "pointer/update-pain...",
+    },
   ]
 
   return (

@@ -66,6 +66,7 @@ export const Ergonomics = () => {
                   content: content.features[currentIndex].withApalis.code,
                   highlights:
                     content.features[currentIndex].withApalis.highlights,
+                  language: "rust"
                 },
               ]}
               fixedHeight={300}
@@ -82,55 +83,45 @@ const content = {
   text: `Apalis provides production-ready task processing with minimal boilerplate, letting you focus on business logic.`,
   features: [
     {
-      name: "Error Handling",
-      description: "Built-in error handling with automatic retry capabilities.",
+      name: "Simple task handlers",
+      description: "Task handlers are just async functions with a macro-free API.",
       color: "#283413",
-      withoutApalis: {
-        fileName: "main.rs",
-        code: `\
-async fn send_email(email: String) -> Result<(), BoxDynError> {
-    if !is_valid_email(&email) {
-        return Err(anyhow!("Invalid email address").into());
-    }
-    Ok(())
-}
-
-#[tokio::main]
-async fn main() -> Result<()> {
-    let conn = Connection::open("tasks.db")?;
-    init_db(&conn)?;
-
-    loop {
-        if let Some((id, data)) = fetch_task(&conn)? {
-            let res = send_email(data).await;
-            if res.is_ok() { // TODO: Handle retries
-                mark_processed(&conn, id)?;
-            }
-        } else {
-            time::sleep(Duration::from_secs(2)).await;
-        }
-    }
-}\
-        `,
-        highlights: [
-          {
-            color: "#283413",
-            lines: [1, 2, 3, 4, 5, 6, 14, 16, 17],
-          },
-        ],
-      },
       withApalis: {
         fileName: "main.rs",
         code: `\
-struct EmailTask {
+struct Email {
     to: String,
     subject: String,
 }
 
-async fn send_email(task: EmailTask, _ctx: TaskContext) -> Result<(), Error> {
-    if !is_valid_email(&task.to) {
-        return Err(anyhow!("Invalid email address").into());
-    }
+async fn send_email(task: Email) {
+    // Do something
+}
+    
+#[tokio::main]
+async fn main() -> Result<()> {
+    let worker = WorkerBuilder::new("rango-tango")
+        .backend(backend)
+        .build(send_email);
+    worker.run().await?;
+}\
+        `,
+        highlights: [
+          {
+            color: "#28233B",
+            lines: [6, 7, 8, 14],
+          },
+        ],
+      },
+    },
+    {
+      name: "Robust error handling",
+      description: "Configurable error handling with retry policies and exponential backoff.",
+      color: "#39300D",
+      withApalis: {
+        fileName: "main.rs",
+        code: `\
+async fn send_email(task: Email) -> Result<(), MyError> {
     Ok(())
 }
     
@@ -138,72 +129,19 @@ async fn send_email(task: EmailTask, _ctx: TaskContext) -> Result<(), Error> {
 async fn main() -> Result<()> {
     let worker = WorkerBuilder::new("rango-tango")
         .backend(backend)
-        .retry(RetryPolicy::retries(5))
+        .retry(
+            RetryPolicy::retries(3)
+              .with_backoff(backoff)
+              .retry_if(can_recover),
+        )
         .build(send_email);
     worker.run().await?;
 }\
         `,
         highlights: [
           {
-            color: "#283413",
-            lines: [6, 7, 8, 9, 10, 17, 19],
-          },
-        ],
-      },
-    },
-    {
-      name: "Retry Mechanism",
-      description: "Configurable retry policies with exponential backoff.",
-      color: "#39300D",
-      withoutApalis: {
-        fileName: "main.rs",
-        code: `\
-use std::time::Duration;
-use tokio::time;
-
-async fn process_with_retries(max_retries: u32) -> Result<(), String> {
-    let mut attempts = 0;
-    let mut delay = Duration::from_secs(1);
-    
-    loop {
-        match send_email().await {
-            Ok(()) => return Ok(()),
-            Err(e) if attempts < max_retries => {
-                attempts += 1;
-                time::sleep(delay).await;
-                delay *= 2;
-            }
-            Err(e) => return Err(e),
-        }
-    }
-}\
-        `,
-        highlights: [
-          {
-            color: "#39300D",
-            lines: [4, 9, 12, 13, 14],
-          },
-        ],
-      },
-      withApalis: {
-        fileName: "main.rs",
-        code: `\
-use apalis::{
-    layers::{retry::RetryPolicy, backoff::ExponentialBackoff},
-    prelude::*,
-};
-
-WorkerBuilder::new("email-worker")
-    .retry(RetryPolicy::retries(3)
-    .with_backoff(ExponentialBackoff::default()))
-    .build(send_email)
-    .run()
-    .await?;\
-        `,
-        highlights: [
-          {
-            color: "#39300D",
-            lines: [7, 8, 9],
+            color: "#28233B",
+            lines: [1, 9, 10, 11, 12, 13],
           },
         ],
       },
@@ -212,175 +150,90 @@ WorkerBuilder::new("email-worker")
       name: "Graceful Shutdown",
       description: "Clean shutdown handling with configurable timeouts.",
       color: "#28233B",
-      withoutApalis: {
-        fileName: "main.rs",
-        code: `\
-use tokio::sync::mpsc;
-use tokio::signal;
-
-async fn worker_loop(rx: mpsc::Receiver<Task>) {
-    let mut shutdown = false;
-    
-    tokio::select! {
-        _ = signal::ctrl_c() => {
-            shutdown = true;
-        }
-        _ = async {
-            while let Some(task) = rx.recv().await {
-                if shutdown {
-                    break;
-                }
-                process_task(task).await;
-            }
-        } => {}
-    }
-}\
-        `,
-        highlights: [
-          {
-            color: "#28233B",
-            lines: [6, 7, 8, 9, 10, 11, 12, 13, 14],
-          },
-        ],
-      },
       withApalis: {
         fileName: "main.rs",
         code: `\
-use apalis::prelude::*;
-
-Monitor::new()
-    .register(worker)
-    .shutdown_timeout(Duration::from_secs(30))
-    .run_with_signal(tokio::signal::ctrl_c())
-    .await?;\
-        `,
-        highlights: [
-          {
-            color: "#28233B",
-            lines: [4, 5],
-          },
-        ],
-      },
-    },
-    {
-      name: "Observability",
-      description: "Built-in metrics and tracing integration.",
-      color: "#10322E",
-      withoutApalis: {
-        fileName: "main.rs",
-        code: `\
-use prometheus::{Counter, Registry};
-use std::sync::Arc;
-
-lazy_static! {
-    static ref JOB_COUNTER: Counter = register_counter!(
-        "tasks_processed_total",
-        "Total number of tasks processed"
-    ).unwrap();
+async fn send_email(task: Email) {
+    // Do something
 }
-
-async fn process_task(task: Task) {
-    let start = std::time::Instant::now();
     
-    // Task processing...
-    
-    let duration = start.elapsed().as_secs_f64();
-    JOB_COUNTER.inc();
-    metrics::histogram!("task_duration_seconds", duration);
-}\
-        `,
-        highlights: [
-          {
-            color: "#10322E",
-            lines: [4, 5, 6, 7, 12, 13, 14, 15, 16],
-          },
-        ],
-      },
-      withApalis: {
-        fileName: "main.rs",
-        code: `\
-use apalis::{
-    layers::{prometheus::PrometheusLayer, tracing::TraceLayer},
-    prelude::*,
-};
-
-Monitor::new()
-    .register(
-        WorkerBuilder::new("email-worker")
-            .layer(PrometheusLayer)
-            .layer(TraceLayer::new())
-            .build_fn(send_email)
-    )
-    .run()
-    .await?;\
-        `,
-        highlights: [
-          {
-            color: "#10322E",
-            lines: [8, 9],
-          },
-        ],
-      },
-    },
-    {
-      name: "Storage Backends",
-      description:
-        "Multiple storage options including Redis, Postgres and SQLite.",
-      color: "#2E1F3B",
-      withoutApalis: {
-        fileName: "main.rs",
-        code: `\
-use redis::Commands;
-use serde_json;
-
-struct RedisQueue {
-    conn: redis::Connection,
-    queue_name: String,
-}
-
-impl RedisQueue {
-    async fn enqueue(&mut self, task: &Task) -> Result<(), redis::RedisError> {
-        let serialized = serde_json::to_string(task)?;
-        self.conn.lpush(&self.queue_name, serialized)?;
-        Ok(())
-    }
-}\
-        `,
-        highlights: [
-          {
-            color: "#2E1F3B",
-            lines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-          },
-        ],
-      },
-      withApalis: {
-        fileName: "main.rs",
-        code: `\
-use apalis::{prelude::*, redis::RedisStorage};
-
 #[tokio::main]
 async fn main() -> Result<()> {
-    let redis_url = std::env::var("REDIS_URL")?;
-    let storage = RedisStorage::connect(redis_url).await?;
-    
-    // Push tasks
-    storage.push(EmailTask { to: "user@example.com" }).await?;
-    
-    // Worker setup
+    let worker = WorkerBuilder::new("rango-tango")
+        .backend(backend)
+        .build(send_email);
     Monitor::new()
-        .register(
-            WorkerBuilder::new("email-worker")
-                .with_storage(storage)
-                .build_fn(send_email)
-        )
-        .run()
-        .await?;
+      .register(|_| worker)
+      .shutdown_timeout(Duration::from_secs(30))
+      .run_with_signal(tokio::signal::ctrl_c())
+      .await?;
+}\
+        `,
+        highlights: [
+          {
+            color: "#28233B",
+            lines: [12, 13],
+          },
+        ],
+      },
+    },
+    {
+      name: "Telemetry and observability",
+      description: "Built-in metrics and tracing integration.",
+      color: "#10322E",
+      withApalis: {
+        fileName: "main.rs",
+        code: `\
+async fn send_email(task: Email) {
+    // Do something
+}
+    
+#[tokio::main]
+async fn main() -> Result<()> {
+    let worker = WorkerBuilder::new("rango-tango")
+        .backend(backend)
+        .layer(PrometheusLayer::new())
+        .layer(TraceLayer::new())
+        .build(send_email);
+    worker.run().await?;
+}\
+        `,
+        highlights: [
+          {
+            color: "#10322E",
+            lines: [9, 10],
+          },
+        ],
+      },
+    },
+    {
+      name: "Distributed and controllable execution",
+      description:
+        "Distributed Sequential and DAG workflows",
+      color: "#2E1F3B",
+
+      withApalis: {
+        fileName: "main.rs",
+        code: `\
+#[tokio::main]
+async fn main() -> Result<()> {
+
+    let workflow = Workflow::new("product-image-workflow")
+       .and_then(generate_thumbnail)
+       .and_then(extract_items)
+       .filter_map(classify_and_recognise)
+       .and_then(publish_to_website);
+
+    let worker = WorkerBuilder::new("rango-tango")
+        .backend(backend)
+        .build(workflow);
+    worker.run().await?;
 }\
         `,
         highlights: [
           {
             color: "#2E1F3B",
-            lines: [5, 6, 7, 8, 12, 13],
+            lines: [5, 6, 7, 8, 12],
           },
         ],
       },

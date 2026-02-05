@@ -7,36 +7,37 @@ import { Icon } from "../icons"
 
 const faqData = [
   {
-    question: "What is Pointer and who is it for?",
+    question: "What is Apalis and who should use it?",
     answer:
-      "Pointer is an AI-powered development platform designed for developers, teams, and organizations who want toaccelerate their coding workflow. It's perfect for both individual developers looking to enhance their productivity and teams seeking seamless collaboration tools.",
+      "Apalis is a Rust-first background job and task processing framework designed for developers building reliable, scalable systems. It’s ideal for backend engineers, platform teams, and infrastructure-focused projects that need asynchronous job execution, worker orchestration, and strong type safety without sacrificing performance.",
   },
   {
-    question: "How does Pointer's AI code review work?",
+    question: "What problems does Apalis solve?",
     answer:
-      "Our AI analyzes your code in real-time, providing intelligent suggestions for improvements, catching potential bugs, and ensuring best practices. It learns from your coding patterns and adapts to your team's standards, making code reviews faster and more consistent.",
+      "Apalis helps you run background jobs such as email delivery, data processing, scheduled tasks, and long-running workflows. It provides a structured way to define jobs, execute them with workers, manage retries, handle failures, and coordinate concurrent task execution in production-grade Rust applications.",
   },
   {
-    question: "Can I integrate Pointer with my existing tools?",
+    question: "How does Apalis handle workers and job execution?",
     answer:
-      "Yes! Pointer offers one-click integrations with popular development tools including GitHub, GitLab, VS Code, Slack, and many more. Our MCP connectivity allows you to easily manage and configure server access across your entire development stack.",
+      "Apalis uses a worker-based execution model where workers continuously pull jobs from a backend and process them asynchronously. It supports configurable concurrency, graceful shutdowns, retries, timeouts, and middleware, giving you fine-grained control over how jobs are executed and supervised.",
   },
   {
-    question: "What's included in the free plan?",
+    question: "Which storage backends are supported?",
     answer:
-      "The free plan includes real-time code suggestions, basic integrations, single MCP server connection, up to 2 AI coding agents, and Vercel deployments with Pointer branding. It's perfect for individual developers getting started.",
+      "Apalis is backend-agnostic and works with multiple storage providers through dedicated crates. Popular options include PostgreSQL, Redis, SQLite, and in-memory backends. This flexibility allows you to choose the best storage layer for your workload, from local development to large-scale production systems.",
   },
   {
-    question: "How do parallel coding agents work?",
+    question: "Can Apalis be integrated into existing Rust applications?",
     answer:
-      "Our parallel coding agents can work on different parts of your codebase simultaneously, solving complex problems faster than traditional single-threaded approaches. You can launch multiple agents to handle different tasks like bug fixes, feature development, and code optimization concurrently.",
+      "Yes. Apalis is designed to integrate cleanly with existing Rust applications and async runtimes like Tokio. It works well alongside popular web frameworks such as Axum and Actix, making it easy to add background processing to APIs, services, and microservice architectures.",
   },
   {
-    question: "Is my code secure with Pointer?",
+    question: "Is Apalis suitable for production use?",
     answer:
-      "Absolutely. We use enterprise-grade security measures including end-to-end encryption, secure data transmission, and compliance with industry standards. Your code never leaves your secure environment without your explicit permission, and we offer on-premises deployment options for enterprise customers.",
+      "Absolutely. Apalis focuses on reliability, observability, and correctness. It supports structured error handling, retries, graceful shutdowns, and extensibility via middleware. Its strongly typed API and async-first design make it a solid choice for production workloads that demand performance and safety.",
   },
-]
+];
+
 
 interface FAQItemProps {
   question: string

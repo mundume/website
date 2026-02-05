@@ -9,31 +9,30 @@ const Middleware: React.FC<MiddlewareProps> = ({ className = "" }) => {
   const layers = [
     {
       name: "Retries",
-      icon: "/images/features/retries.svg",
-      installed: true,
+      icon: "/images/features/retry.svg",
     },
-    { name: "Prometheus", icon: "/images/features/prometheus.svg" },
+    {
+      name: "Prometheus", icon: "/images/features/prometheus.svg",
+      external: true,
+    },
     {
       name: "Sentry",
       icon: "/images/features/sentry.svg",
-      installed: true,
+      external: true,
     },
     { name: "Tracing", icon: "/images/features/tracing.svg" },
     {
       name: "CatchPanic",
-      icon: "/images/features/catch-panics.svg",
-      installed: true,
+      icon: "/images/features/panic.svg",
     },
-    { name: "Parallelize", icon: "/images/features/parallelize.svg" },
-    { name: "Circuit Breaker", icon: "/images/features/circuit-breaker.svg" },
-    { name: "Long Running", icon: "/images/features/long-running.svg" },
+    { name: "CircuitBreaker", icon: "/images/features/circuit.svg" },
   ];
 
   return (
     <div
       className={`w-full h-full flex items-center justify-center p-4 relative ${className}`}
       role="img"
-      aria-label="Middleware component showcasing available integrations list"
+      aria-label="Middleware component showcasing available layers"
     >
       <div
         style={{
@@ -123,6 +122,7 @@ const Middleware: React.FC<MiddlewareProps> = ({ className = "" }) => {
                 }}
               >
                 <div
+                  className="border border-1 rounded-sm p-1"
                   style={{
                     width: "24px",
                     height: "24px",
@@ -153,7 +153,7 @@ const Middleware: React.FC<MiddlewareProps> = ({ className = "" }) => {
                   {layers.name}
                 </span>
               </div>
-              {layers.installed && (
+              {layers.external && (
                 <div
                   style={{
                     background: "hsl(var(--primary) / 0.08)",
@@ -175,7 +175,7 @@ const Middleware: React.FC<MiddlewareProps> = ({ className = "" }) => {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    Enabled
+                    External
                   </span>
                 </div>
               )}
