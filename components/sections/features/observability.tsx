@@ -1,6 +1,6 @@
 import type React from "react"
 
-interface DeploymentEasyProps {
+interface ObservabilityProps {
   /** Width of component – number (px) or any CSS size value */
   width?: number | string
   /** Height of component – number (px) or any CSS size value */
@@ -9,16 +9,16 @@ interface DeploymentEasyProps {
   className?: string
 }
 
-const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height = "100%", className = "" }) => {
+const Observability: React.FC<ObservabilityProps> = ({ width = "100%", height = "100%", className = "" }) => {
   /* ------------------------------------------------------------
    * Theme-based design tokens using global CSS variables
    * ---------------------------------------------------------- */
   const themeVars = {
-    "--deploy-primary-color": "hsl(var(--primary))",
-    "--deploy-background-color": "hsl(var(--background))",
-    "--deploy-text-color": "hsl(var(--foreground))",
-    "--deploy-text-secondary": "hsl(var(--muted-foreground))",
-    "--deploy-border-color": "hsl(var(--border))",
+    "--observe-primary-color": "hsl(var(--primary))",
+    "--observe-background-color": "hsl(var(--background))",
+    "--observe-text-color": "hsl(var(--foreground))",
+    "--observe-text-secondary": "hsl(var(--muted-foreground))",
+    "--observe-border-color": "hsl(var(--border))",
   } as React.CSSProperties
 
   const logLines = [
@@ -55,11 +55,8 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
         ...themeVars,
       }}
       role="img"
-      aria-label="Deployment console output with Deploy on Vercel button"
+      aria-label="Telemetry console output with the tracing crate"
     >
-      {/* -------------------------------------------------------- */}
-      {/* Console / Terminal panel                                */}
-      {/* -------------------------------------------------------- */}
       <div
         style={{
           position: "absolute",
@@ -68,13 +65,12 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
           transform: "translate(-50%, -50%)",
           width: "340px",
           height: "239px",
-          background: "linear-gradient(180deg, var(--deploy-background-color) 0%, transparent 100%)",
+          background: "linear-gradient(180deg, var(--observe-background-color) 0%, transparent 100%)",
           backdropFilter: "blur(7.907px)",
           borderRadius: "10px",
           overflow: "hidden",
         }}
       >
-        {/* Inner translucent panel – replicates subtle overlay */}
         <div
           style={{
             position: "absolute",
@@ -83,8 +79,6 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
             background: "hsl(var(--foreground) / 0.08)",
           }}
         />
-
-        {/* Log text */}
         <div
           style={{
             position: "relative",
@@ -94,7 +88,7 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
             fontFamily: "'Geist Mono', 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace",
             fontSize: "10px",
             lineHeight: "16px",
-            color: "var(--deploy-text-color)",
+            color: "var(--observe-text-color)",
             whiteSpace: "pre",
           }}
         >
@@ -110,7 +104,7 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
           style={{
             position: "absolute",
             inset: 0,
-            border: "0.791px solid var(--deploy-border-color)",
+            border: "0.791px solid var(--observe-border-color)",
             borderRadius: "10px",
             pointerEvents: "none",
           }}
@@ -120,4 +114,4 @@ const DeploymentEasy: React.FC<DeploymentEasyProps> = ({ width = "100%", height 
   )
 }
 
-export default DeploymentEasy
+export default Observability

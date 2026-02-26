@@ -26,34 +26,39 @@ export function PricingSection() {
         },
         {
             name: "Pro",
-            monthlyPrice: "$20",
-            annualPrice: "$16",
+            monthlyPrice: "$99",
+            annualPrice: "$999",
             description: "Ideal for professionals.",
             features: [
+                "Batch processing support",
+                "Pausable Queues",
+                "Improved perfomance via bulk inserts",
                 "Enhanced Web UI",
                 "Observability for Cronjobs",
                 "Custom feature requests",
-                "Up to 10 concurrent AI coding agents",
-                "Advanced workflow coordination",
+                "Custom telemetry backends",
                 "Priority email and chat support",
             ],
             buttonText: "Join now",
             buttonClass:
-                "bg-primary-foreground shadow-[0px_1px_1px_-0.5px_rgba(16,24,40,0.20)] text-primary text-shadow-[0px_1px_1px_rgba(16,24,40,0.08)] hover:bg-primary-foreground/90",
+                "bg-primary-foreground shadow-[0px_1px_1px_-0.5px_rgba(16,24,40,0.20)] text-black text-shadow-[0px_1px_1px_rgba(16,24,40,0.08)] hover:bg-primary-foreground/90",
             popular: true,
         },
         {
             name: "Ultra",
-            monthlyPrice: "$200",
-            annualPrice: "$160",
+            monthlyPrice: "$499",
+            annualPrice: "$4999",
             description: "Tailored solutions for teams.",
             features: [
+                "Encryption support",
+                "Advanced workflow coordination",
                 "Dedicated account support",
-                "Collaborative coding with team chat",
+                "Collaborative coding with our team",
                 "Priority Custom feature requests",
-                "1 Month log retention",
+                "Logs and metrics retention",
                 "Enterprise-grade security and compliance",
                 "Priority deployments and SLA guarantees",
+                "All Pro features"
             ],
             buttonText: "Talk to Sales",
             buttonClass:
@@ -98,11 +103,11 @@ export function PricingSection() {
                     </div>
                 </div>
             </div>
-            <div className="w-full max-w-screen-xl mx-auto self-stretch px-5 flex flex-col md:flex-row justify-start items-start gap-4 md:gap-6 mt-6">
+            <div className="w-full max-w-screen-2xl mx-auto self-stretch px-5 flex flex-col md:flex-row justify-start items-start gap-4 md:gap-6 mt-6">
                 {pricingPlans.map((plan) => (
                     <div
                         key={plan.name}
-                        className={`flex-1 p-4 overflow-hidden rounded-md flex flex-col justify-start items-start gap-6 ${plan.popular ? "bg-primary shadow-[0px_4px_8px_-2px_rgba(0,0,0,0.10)]" : "bg-gradient-to-b from-gray-50/5 to-gray-50/0"}`}
+                        className={`flex-1 p-4 overflow-hidden rounded-md flex flex-col justify-start items-center self-stretch gap-6 ${plan.popular ? "bg-primary shadow-[0px_4px_8px_-2px_rgba(0,0,0,0.10)]" : "bg-gradient-to-b from-gray-50/5 to-gray-50/0"}`}
                         style={plan.popular ? {} : { outline: "1px solid hsl(var(--border))", outlineOffset: "-1px" }}
                     >
                         <div className="self-stretch flex flex-col justify-start items-start gap-6">
@@ -151,7 +156,7 @@ export function PricingSection() {
                                         <div
                                             className={`text-center text-sm font-medium leading-tight ${plan.popular ? "text-primary-foreground/70" : "text-zinc-400"}`}
                                         >
-                                            /month
+                                            /{isAnnual?"year":"month"}
                                         </div>
                                     </div>
                                     <div
@@ -167,7 +172,7 @@ export function PricingSection() {
                             >
                                 <div className="px-1.5 flex justify-center items-center gap-2">
                                     <span
-                                        className={`text-center text-sm font-medium leading-tight ${plan.name === "Free" ? "text-gray-800" : plan.name === "Pro" ? "text-primary" : "text-zinc-950"}`}
+                                        className={`text-center text-sm font-medium leading-tight ${plan.name === "Free" ? "text-gray-800" : plan.name === "Pro" ? "text-black" : "text-zinc-950"}`}
                                     >
                                         {plan.buttonText}
                                     </span>

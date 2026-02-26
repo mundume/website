@@ -1,9 +1,9 @@
 import FunctionalApproach from "./features/functional"
-import RealtimeCodingPreviews from "./features/real-time-previews"
-import CompatibleServices from "./features/compatible-services"
-import MCPConnectivityIllustration from "./features/middleware" // Updated import
-import EasyDeployment from "./features/easy-deployment"
-import ParallelCodingAgents from "./features/parallel-agents" // Updated import
+import WebBasedUI from "./features/web-ui"
+import CompatibleBackends from "./features/compatible-backends"
+import Middleware from "./features/middleware"
+import Observability from "./features/observability"
+import Workflows from "./features/workflows"
 
 const FeatureCard = ({ title, description, Component }) => (
     <div className="overflow-hidden rounded-md border border-white/20 flex flex-col justify-start items-start relative">
@@ -41,32 +41,32 @@ export function Features() {
         {
             title: "Web-based UI",
             description: "Intuitive web interface for managing and monitoring background tasks.",
-            Component: RealtimeCodingPreviews,
+            Component: WebBasedUI,
         },
         {
             title: "Compatible with popular backends",
             description: "Easily connect your projects to databases and services.",
-            Component: CompatibleServices,
+            Component: CompatibleBackends,
         },
         {
             title: "Flexible Middleware",
             description: "Provides middleware support build on top of tower",
-            Component: MCPConnectivityIllustration,
+            Component: Middleware,
         },
         {
             title: "Workflow Orchestration", 
             description: "Coordinate complex background tasks with ease.",
-            Component: ParallelCodingAgents,
+            Component: Workflows,
         },
         {
             title: "Observability",
             description: "Gain insights into your background tasks with built-in instrumentation.",
-            Component: EasyDeployment,
+            Component: Observability,
         },
     ]
 
     return (
-        <section className="w-full max-w-screen-xl mx-auto px-5 flex flex-col justify-center items-center overflow-visible bg-transparent">
+        <section className="w-full max-w-screen-2xl mx-auto px-5 flex flex-col justify-center items-center overflow-visible bg-transparent">
             <div className="w-full py-8 md:py-16 relative flex flex-col justify-start items-start gap-6">
                 <div className="w-[547px] h-[938px] absolute top-[614px] left-[80px] origin-top-left rotate-[-33.39deg] bg-primary/10 blur-[130px] z-0" />
                 <div className="self-stretch py-8 md:py-14 flex flex-col justify-center items-center gap-2 z-10">

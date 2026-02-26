@@ -29,7 +29,7 @@ export const Button: FC<{
         className={`flex items-center gap-1 px-6 font-medium rounded-sm whitespace-nowrap ${
           secondary
             ? "bg-gradient-to-br from-zinc-700 to-zinc-900 text-white"
-            : "bg-white text-black"
+            : "text-black"
         }`}
       >
         <span>{children}</span>

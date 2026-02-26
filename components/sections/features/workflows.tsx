@@ -1,24 +1,26 @@
+import { ArrowsUpDownIcon } from "@/components/icons/arrows-up-down"
+import { CheckIcon } from "@/components/icons/check"
+import { FilePlusIcon } from "@/components/icons/file-plus"
 import type React from "react"
 
-interface ParallelCodingAgentsProps {
+interface WorkflowsProps {
   className?: string
 }
 
-const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className = "" }) => {
-  // Theme-based CSS variables using global theme
+const Workflows: React.FC<WorkflowsProps> = ({ className = "" }) => {
   const themeVars = {
-    "--pca-background-color": "hsl(var(--background))",
-    "--pca-background-glass": "hsl(var(--card) / 0.2)",
-    "--pca-background-gradient-start": "hsl(var(--card) / 0.2)",
-    "--pca-background-gradient-end": "transparent",
-    "--pca-text-primary": "hsl(var(--foreground))",
-    "--pca-text-secondary": "hsl(var(--muted-foreground))",
-    "--pca-border-color": "hsl(var(--border))",
-    "--pca-border-main": "hsl(var(--border))",
-    "--pca-shadow-color": "rgba(0, 0, 0, 0.12)", // Keeping as is, common shadow
-    "--pca-container-background": "hsl(var(--card) / 0.4)",
-    "--pca-container-gradient-start": "hsl(var(--card) / 0.4)",
-    "--pca-container-gradient-end": "transparent",
+    "--workflows-background-color": "hsl(var(--background))",
+    "--workflows-background-glass": "hsl(var(--card) / 0.2)",
+    "--workflows-background-gradient-start": "hsl(var(--card) / 0.2)",
+    "--workflows-background-gradient-end": "transparent",
+    "--workflows-text-primary": "hsl(var(--foreground))",
+    "--workflows-text-secondary": "hsl(var(--muted-foreground))",
+    "--workflows-border-color": "hsl(var(--border))",
+    "--workflows-border-main": "hsl(var(--border))",
+    "--workflows-shadow-color": "rgba(0, 0, 0, 0.12)", // Keeping as is, common shadow
+    "--workflows-container-background": "hsl(var(--card) / 0.4)",
+    "--workflows-container-gradient-start": "hsl(var(--card) / 0.4)",
+    "--workflows-container-gradient-end": "transparent",
   }
 
   const CheckmarkIcon = () => (
@@ -31,7 +33,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
     >
       <path
         d="M3.85156 7.875L6.47656 10.5L10.8516 3.5"
-        stroke="var(--pca-text-primary)"
+        stroke="var(--workflows-text-primary)"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
@@ -50,7 +52,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
     >
       <path
         d="M1.75 7C1.75 4.1005 4.1005 1.75 7 1.75C9.8995 1.75 12.25 4.1005 12.25 7C12.25 9.8995 9.8995 12.25 7 12.25"
-        stroke="var(--pca-text-primary)"
+        stroke="var(--workflows-text-primary)"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
@@ -58,7 +60,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
       />
       <path
         d="M4.375 10.5L1.75 12.25L3.5 9.625"
-        stroke="var(--pca-text-primary)"
+        stroke="var(--workflows-text-primary)"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
@@ -77,7 +79,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
     >
       <path
         d="M7 1.75L8.225 5.775L12.25 7L8.225 8.225L7 12.25L5.775 8.225L1.75 7L5.775 5.775L7 1.75Z"
-        stroke="var(--pca-text-primary)"
+        stroke="var(--workflows-text-primary)"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
@@ -86,34 +88,30 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
     </svg>
   )
 
-  const agents = [
-    {
-      icon: <CheckmarkIcon />,
-      title: "Update buttons",
-      tokens: "12k tokens",
-      model: "o3",
-      branch: "pointer/update-pain...",
-    },
-    {
-      icon: <RefreshIcon />,
-      title: "Fix sanity issue",
-      tokens: "12k tokens",
-      model: "claude-sonnet-4",
-      branch: "pointer/update-pain...",
-    },
+  const steps = [
     {
       icon: <SparklesIcon />,
-      title: "Plan for seamless toast",
-      tokens: "30k tokens",
-      model: "o3",
-      branch: "pointer/update-pain...",
+      title: "Fetch unpaid users",
+      workflow: "AndThen",
+      node: "and_then(fetch_unpaid)",
     },
     {
-      icon: <SparklesIcon />,
-      title: "Plan for seamless toast",
-      tokens: "30k tokens",
-      model: "o3",
-      branch: "pointer/update-pain...",
+      icon: <CheckIcon />,
+      title: "Remove unsubscribed",
+      workflow: "FilterMap",
+      node: "filter_map(remove_unsubs)",
+    },
+    {
+      icon: <FilePlusIcon />,
+      title: "Generate report",
+      workflow: "Fold",
+      node: "fold(build_report)",
+    },
+    {
+      icon: <ArrowsUpDownIcon />,
+      title: "Email report",
+      workflow: "AndThen",
+      node: "and_then(email_report)",
     },
   ]
 
@@ -125,7 +123,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
           width: "100%",
           height: "100%",
           position: "relative",
-          background: `linear-gradient(180deg, var(--pca-container-gradient-start) 0%, var(--pca-container-gradient-end) 100%)`,
+          background: `linear-gradient(180deg, var(--workflows-container-gradient-start) 0%, var(--workflows-container-gradient-end) 100%)`,
           backdropFilter: "blur(8.372px)",
           borderRadius: "10.047px",
           boxSizing: "border-box",
@@ -157,7 +155,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
           margin: "24px 24px 0 24px", // Updated margin to 24px on both sides
         }}
       >
-        {agents.map((agent, index) => (
+        {steps.map((step, index) => (
           <div
             key={index}
             style={{
@@ -166,11 +164,11 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
               alignItems: "flex-start",
               gap: "8.658px",
               padding: "6.494px 8.658px",
-              background: `linear-gradient(180deg, var(--pca-background-gradient-start) 0%, var(--pca-background-gradient-end) 100%)`,
+              background: `linear-gradient(180deg, var(--workflows-background-gradient-start) 0%, var(--workflows-background-gradient-end) 100%)`,
               backdropFilter: "blur(19.481px)",
               borderRadius: "8.658px",
-              boxShadow: `0px 1.082px 2.165px 0px var(--pca-shadow-color)`,
-              border: "0.541px solid var(--pca-border-color)",
+              boxShadow: `0px 1.082px 2.165px 0px var(--workflows-shadow-color)`,
+              border: "0.541px solid var(--workflows-border-color)",
               width: "100%",
               maxWidth: "320px",
               flexShrink: 0,
@@ -202,7 +200,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
                   flexShrink: 0,
                 }}
               >
-                {agent.icon}
+                {step.icon}
               </div>
             </div>
             {/* Content container */}
@@ -217,11 +215,11 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
                 flexShrink: 0,
                 ...(index === 1
                   ? {
-                      flexBasis: 0,
-                      flexGrow: 1,
-                      minHeight: "1px",
-                      minWidth: "1px",
-                    }
+                    flexBasis: 0,
+                    flexGrow: 1,
+                    minHeight: "1px",
+                    minWidth: "1px",
+                  }
                   : {}),
               }}
             >
@@ -231,12 +229,12 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
                   fontWeight: 400,
                   fontSize: "10.823px",
                   lineHeight: "17.316px",
-                  color: "var(--pca-text-primary)",
+                  color: "var(--workflows-text-primary)",
                   whiteSpace: "pre",
                   flexShrink: 0,
                 }}
               >
-                {agent.title}
+                {step.title}
               </div>
               <div
                 style={{
@@ -244,7 +242,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
                   fontWeight: 400,
                   fontSize: "10.823px",
                   lineHeight: "17.316px",
-                  color: "var(--pca-text-secondary)",
+                  color: "var(--workflows-text-secondary)",
                   whiteSpace: index === 1 ? "nowrap" : "pre",
                   overflow: index === 1 ? "hidden" : "visible",
                   textOverflow: index === 1 ? "ellipsis" : "clip",
@@ -253,7 +251,7 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
                   flexShrink: 0,
                 }}
               >
-                {`${agent.tokens} • ${agent.model} • ${agent.branch}`}
+                {`${step.workflow} • ${step.node}`}
               </div>
             </div>
           </div>
@@ -263,4 +261,4 @@ const ParallelCodingAgents: React.FC<ParallelCodingAgentsProps> = ({ className =
   )
 }
 
-export default ParallelCodingAgents
+export default Workflows

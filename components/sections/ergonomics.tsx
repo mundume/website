@@ -10,7 +10,7 @@ export const Ergonomics = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   return (
     <section className="relative my-4">
-      <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-8 lg:px-16">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16">
         <h2 className="font-display mb-6 text-2xl sm:text-3xl lg:text-4xl text-white text-center">
           {content.heading}
         </h2>

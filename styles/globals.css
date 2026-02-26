@@ -1,5 +1,4 @@
 @import url("./hljs.css");
-@import url("./twoslash-shiki.css");
 
 @tailwind base;
 @tailwind components;
@@ -268,6 +267,75 @@ pre.shiki div.highlight {
   opacity: 1;
   background-color: #27272a;
 }
+
+pre.shiki {
+  /* In theory shiki will overwrite these, but this is to make sure there are defaults regardless */
+  background-color: white;
+  color: black;
+
+  /* Give it some space to breathe */
+  padding: 12px;
+
+  /* All code samples get a grey border, twoslash ones get a different color */
+  /* border-left: 1px solid #999; */
+  /* border-bottom: 1px solid #999; */
+
+  /* margin-bottom: 3rem; */
+
+  /* Important to allow the code to move horizontally; */
+  overflow-x: auto;
+  position: relative;
+
+  &:hover {
+    contain: none;
+    @apply overflow-visible;
+  }
+}
+pre.shiki {
+  overflow-x: auto;
+  counter-reset: line-number;
+}
+pre.shiki:hover .dim {
+  opacity: 1;
+}
+pre.shiki div.dim {
+  opacity: 0.5;
+}
+pre.shiki div.dim,
+pre.shiki span.highlighted {
+  margin: 0;
+  padding: 0;
+}
+pre.shiki span.highlighted {
+  opacity: 1;
+  background-color: #27272a;
+  display: inline-block;
+  width: 100%;
+}
+pre.shiki span.line {
+  min-height: 1rem;
+  counter-increment: line-number;
+}
+
+pre.shiki .line::before {
+  content: counter(line-number);
+  color: hsl(240 5.3% 26.1%);
+  display: inline-block;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
+  width: 2em;
+}
+
+pre.shiki code {
+  border: 0;
+  background: none;
+}
+
+/** Don't show the language identifiers */
+pre.shiki .language-id {
+  display: none;
+}
+
 
 .video-container {
   position: relative;

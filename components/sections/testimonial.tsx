@@ -3,18 +3,18 @@ import Image from "next/image"
 const testimonials = [
   {
     quote:
-      "The real-time code suggestions from Pointer feel like having a senior engineer reviewing every line of code as you write. The accuracy of its recommendations has improved our overall code quality, reduced review time.",
-    name: "Annette Black",
-    company: "Sony",
-    avatar: "/images/avatars/annette-black.png",
+      "Apalis was the missing puzzle piece for me migrating from another ecosystem, and has excelled at its job. I was looking for something like it for years!",
+    name: "Kat Marchán",
+    company: "Fastly",
+    avatar: "https://avatars.githubusercontent.com/u/17535?v=4",
     type: "large-teal",
   },
   {
     quote:
-      "Integrating Pointer into our stack was smooth, and the MCP server connections saved us days of configuration work",
-    name: "Dianne Russell",
-    company: "McDonald's",
-    avatar: "/images/avatars/dianne-russell.png",
+      "we are using apalis in Vodafone Oman for Whatsapp Bot Project. it represents the core of the entire bot.",
+    name: "Anwar Al Jahwari",
+    company: "Vodafone Oman",
+    avatar: "https://avatars.githubusercontent.com/u/5598959?v=4",
     type: "small-dark",
   },
   {
@@ -137,8 +137,8 @@ export function Testimonials() {
             Developers love it
           </h2>
           <p className="self-stretch text-center text-muted-foreground text-sm md:text-sm lg:text-base font-medium leading-[18.20px] md:leading-relaxed lg:leading-relaxed">
-            {"Hear how developers ship products faster, collaborate seamlessly,"} <br />{" "}
-            {"and build with confidence using Pointer's powerful AI tools"}
+            {"Hear how developers ship products faster"} <br />{" "}
+            {"and build with confidence using apalis and apalis based backends"}
           </p>
         </div>
       </div>

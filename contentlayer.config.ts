@@ -5,16 +5,16 @@ import { makeSource } from "contentlayer/source-files";
 import remarkGfm from "remark-gfm";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 import rehypePrettyCode from "rehype-pretty-code";
-import remarkShikiTwoslash from "remark-shiki-twoslash";
+import rehypeShiki from '@shikijs/rehype'
 import rehypeRaw from "rehype-raw";
 import { nodeTypes } from "@mdx-js/mdx";
 import codeImport from "remark-code-import";
-import remarkMdxCodeMeta from "remark-mdx-code-meta";
+import rehypeMdxCodeProps from 'rehype-mdx-code-props'
 import rehypeSlug from "rehype-slug";
 import rehypeMermaid from "./lib/rehypeMermaid";
-import rehypeExampleCompiler from "./lib/compileExample";
-import { visit } from "unist-util-visit";
-export const CODE_BLOCK_FILENAME_REGEX = /filename="([^"]+)"/;
+import remarkExampleCompiler, { parseCompileMetaString } from "./lib/compileExample";
+import { transformerNotationHighlight, transformerNotationWordHighlight, transformerMetaHighlight } from '@shikijs/transformers'
+export const CODE_BLOCK_FILENAME_REGEX = /fileName="([^"]+)"/;
 
 const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
   onVisitLine(node: any) {
@@ -40,18 +40,30 @@ export default makeSource({
   documentTypes: [DocsPage, BlogPost, Tutorial],
   mdx: {
     remarkPlugins: [
-      [rehypeExampleCompiler, {}],
+      [remarkExampleCompiler, {}],
       [codeImport as any, { rootDir: process.cwd() + "/content" }],
-      // @ts-expect-error
-      [
-        remarkShikiTwoslash.default,
-        { themes: ["github-dark", "github-light"] },
-      ],
-      // [conditionalShikiTwoslash, { theme: "github-dark" }],
       remarkGfm,
-      remarkMdxCodeMeta,
+
     ],
     rehypePlugins: [
+      [
+        rehypeShiki,
+        {
+          themes: {
+            light: "github-light",
+            dark: "github-dark"
+          },
+          transformers: [
+            transformerNotationHighlight(),
+            transformerNotationWordHighlight(),
+            transformerMetaHighlight()
+          ],
+          langs: ["rust"],
+          defaultColor: 'dark',
+          parseMetaString: parseCompileMetaString,
+        },
+      ],
+
       [
         rehypeMermaid,
         {
@@ -59,7 +71,6 @@ export default makeSource({
           className: "mermaid-diagram",
         },
       ],
-
       [rehypeRaw, { passThrough: nodeTypes }],
 
       [
@@ -68,6 +79,7 @@ export default makeSource({
       ] as any,
 
       [rehypeSlug],
+      [rehypeMdxCodeProps],
     ],
   },
 });

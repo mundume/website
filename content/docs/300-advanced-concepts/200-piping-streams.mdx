@@ -1,0 +1,179 @@
+---
+title: Piping Streams
+excerpt: Discover how to integrate apalis with various backends, including Redis, PostgreSQL, MySQL, and SQLite. This guide walks you through configuring each backend, scheduling tasks, and running backend-specific TaskRunner instances. Learn best practices for setup, performance optimization, and efficient task management using your chosen storage solution.
+bottomNavigation: pagination
+---
+
+### **Backends: Setting Up Backends**
+
+Configuring a backend in apalis is straightforward and requires integrating the backend of your choice into your application. Each backend has its setup process tailored to its unique properties.
+### **Steps to Configure a Backend**
+1. **Add the Backend Dependency**: Ensure the desired backend's crate is included in your `Cargo.toml` file.
+2. **Initialize the Backend**: Create and configure the backend connection.
+3. **Register the Backend with a Worker**: Connect the backend to a worker to process tasks.
+
+Below are setup instructions for each supported backend.
+
+---
+
+#### **Redis Backend**
+Redis is a high-performance, in-memory datastore suitable for fast task processing.
+
+**Add Redis to your dependencies:**
+```rust
+use apalis::error::TaskError;
+use apalis::monitor::Monitor;
+use apalis::redis::RedisStorage;
+use apalis::worker::WorkerBuilder;
+use redis::Client;
+use tokio::main;
+
+#[main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::open("redis://127.0.0.1/")?;
+    let storage = RedisStorage::new(client);
+
+    let worker = WorkerBuilder::new("example-worker")
+        .with_storage(storage.clone())
+        .build(); // Explicitly build the worker
+
+    let monitor = Monitor::builder()
+        .register(worker) // Register the worker directly
+        .build();
+
+    monitor.run().await?;
+    Ok(())
+}
+
+```
+
+---
+
+#### **MySQL Backend**
+MySQL is a relational database ideal for applications requiring persistent task storage.
+
+**Add MySQL to your dependencies:**
+```toml
+[dependencies]
+apalis = "0.6"
+apalis-mysql = "0.6"
+mysql = "24"
+```
+
+**Code Example:**
+```rust
+use apalis::error::TaskError;
+use apalis::layers::Storage;
+use apalis::monitor::Monitor;
+use apalis::mysql::MySqlStorage;
+use apalis::worker::WorkerBuilder;
+use sqlx::MySqlPool;
+use tokio::main;
+
+#[main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create MySQL connection pool
+    let pool = MySqlPool::connect("mysql://user:password@localhost/dbname").await?;
+    
+    // Initialize MySQL Storage
+    let storage = MySqlStorage::new(pool);
+
+    // Create a worker and register it explicitly
+    let worker = WorkerBuilder::new("example-worker")
+        .with_storage(storage.clone())
+        .build(); // Explicitly build the worker
+
+    // Create and register the worker with the monitor
+    let monitor = Monitor::builder()
+        .register(worker) // Correct method for Apalis 0.6
+        .build();
+
+    // Run the monitor
+    monitor.run().await?;
+    
+    Ok(())
+}
+
+```
+
+---
+
+#### **PostgreSQL Backend**
+PostgreSQL is a powerful database that supports advanced features like JSON and high concurrency.
+
+**Add PostgreSQL to your dependencies:**
+```toml
+[dependencies]
+apalis = "0.6"
+apalis-postgres = "0.6"
+postgres = "0.20"
+```
+
+**Code Example:**
+```rust
+use apalis::{Monitor, WorkerBuilder}; // Import only necessary items from apalis
+use apalis::postgres::PostgresStorage;
+use sqlx::PgPool;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let pool = PgPool::connect("postgres://user:password@localhost/dbname").await?;
+    let storage = PostgresStorage::new(pool);
+    Monitor::new()
+        .register("example-worker", move || {
+            WorkerBuilder::new("example-worker")
+                .with_storage(storage.clone())
+                .build()
+        })
+        .run()
+        .await?;
+    Ok(())
+}
+
+```
+
+---
+
+#### **In-Memory Backend**
+The in-memory backend is suitable for testing and development. It does not persist tasks across application restarts.
+
+**Add apalis to your dependencies:**
+```toml
+[dependencies]
+apalis = "0.6"
+```
+
+**Code Example:**
+```rust
+use apalis::monitor::Monitor;
+use apalis::memory::MemoryStorage;
+use apalis::worker::WorkerBuilder;
+use tokio::main;
+
+#[main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize in-memory storage
+    let storage = MemoryStorage::new();
+
+    // Create a worker
+    let worker = WorkerBuilder::new("example-worker")
+        .with_storage(storage.clone())
+        .build(); // Explicitly build the worker
+
+    // Create and register the worker with the monitor
+    let monitor = Monitor::builder()
+        .register(worker) // `register_with_count` removed in Apalis 0.6
+        .build();
+
+    // Run the monitor
+    monitor.run().await?;
+    
+    Ok(())
+}
+
+```
+
+---
+
+### **Next Steps**
+With your backend configured, you may want to explore how to implement a custom backend to suit specific storage requirements. The next section will cover the essentials of building a custom backend, including necessary traits, interfaces, and best practices.

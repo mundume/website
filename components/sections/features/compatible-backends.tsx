@@ -1,21 +1,21 @@
 import type React from "react";
 
-interface CompatibleServicesProps {
+interface CompatibleBackendsProps {
   className?: string;
 }
 
-const CompatibleServices: React.FC<CompatibleServicesProps> = ({
+const CompatibleBackends: React.FC<CompatibleBackendsProps> = ({
   className = "",
 }) => {
   const themeVars = {
-    "--oci-primary-color": "hsl(var(--primary))",
-    "--oci-background-color": "hsl(var(--background))",
-    "--oci-foreground-color": "hsl(var(--foreground))",
-    "--oci-muted-foreground-color": "hsl(var(--muted-foreground))",
-    "--oci-border-color": "hsl(var(--border))",
-    "--oci-shadow-color": "rgba(0, 0, 0, 0.12)",
-    "--oci-gradient-light-gray-start": "hsl(var(--foreground) / 0.2)",
-    "--oci-gradient-light-gray-end": "transparent",
+    "--compatible-primary-color": "hsl(var(--primary))",
+    "--compatible-background-color": "hsl(var(--background))",
+    "--compatible-foreground-color": "hsl(var(--foreground))",
+    "--compatible-muted-foreground-color": "hsl(var(--muted-foreground))",
+    "--compatible-border-color": "hsl(var(--border))",
+    "--compatible-shadow-color": "rgba(0, 0, 0, 0.12)",
+    "--compatible-gradient-light-gray-start": "hsl(var(--foreground) / 0.2)",
+    "--compatible-gradient-light-gray-end": "transparent",
   } as React.CSSProperties;
 
   // Helper component for rendering each logo box
@@ -28,7 +28,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
       height: "60px",
       position: "relative",
       borderRadius: "9px",
-      border: `1px ${themeVars["--oci-border-color"]} solid`,
+      border: `1px ${themeVars["--compatible-border-color"]} solid`,
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
@@ -47,8 +47,8 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
     };
 
     if (isGradientBg) {
-      boxStyle.background = `linear-gradient(180deg, ${themeVars["--oci-gradient-light-gray-start"]} 0%, ${themeVars["--oci-gradient-light-gray-end"]} 100%)`;
-      boxStyle.boxShadow = `0px 1px 2px ${themeVars["--oci-shadow-color"]}`;
+      boxStyle.background = `linear-gradient(180deg, ${themeVars["--compatible-gradient-light-gray-start"]} 0%, ${themeVars["--compatible-gradient-light-gray-end"]} 100%)`;
+      boxStyle.boxShadow = `0px 1px 2px ${themeVars["--compatible-shadow-color"]}`;
       boxStyle.backdropFilter = "blur(18px)";
       boxStyle.padding = "6px 8px";
     }
@@ -131,7 +131,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
 		c5.171-2.269,31.844-10.338,63.378-9.991c45.897,0.488,83.813,18.193,109.647,51.204c17.433,22.279,5.93,76.516,0.169,98.799
 		c-11.971,46.351-34.163,96.026-61.14,137.128c4.082,3.001,16.518,7.962,51.218,0.798c11.688-2.412,18.724-0.282,20.909,6.325
 		C491.615,322.609,468.342,337.315,455.442,343.302z"
-          fill="var(--oci-primary-color)"
+          fill="var(--compatible-primary-color)"
         />
       </g>
       <defs>
@@ -171,7 +171,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
 		c10.29,18.826,16.562,51.096,16.562,51.096s-0.545-2.092-3.129-9.39c-2.298-6.454-13.732-26.494-16.441-31.177
 		c-4.633,17.108-6.473,28.652-4.813,31.472c2.449,4.134,4.807,10.559,6.982,17.965H100.063c-5.67,0-10.461-4.794-10.461-10.463
 		V104.341c0-5.67,4.791-10.461,10.461-10.461h212.236C285.809,139.032,264.509,192.997,255.907,237.77z"
-          fill="var(--oci-primary-color)"
+          fill="var(--compatible-primary-color)"
         />
       </g>
     </svg>
@@ -208,7 +208,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
             c0,5.157,7.115,10.609,20.652,17.084c27.078,12.941,177.409,73.666,201.17,85.02c23.759,11.361,40.464,11.511,70.543-4.163
             c30.071-15.682,171.341-73.766,198.613-87.984c13.877-7.231,20.012-12.834,20.007-17.94c0-4.791,0.013-50.923,0.013-50.923
             c-0.017-0.006-0.037-0.012-0.054-0.019C511.225,226.497,504.712,231.934,491.479,238.831z"
-          fill="var(--oci-primary-color)"
+          fill="var(--compatible-primary-color)"
         />
       </g>
     </svg>
@@ -280,7 +280,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
 		c1.609,2.612,4.333,6.109,6.766,7.947c2.657,2.005,5.394,4.15,8.238,5.885c5.065,3.09,10.721,4.853,15.595,7.946
 		C498.825,302.584,501.678,304.879,504.48,306.938z M420.994,344.776v-58.062H404.16v58.169c0,11.544,8.579,18.02,25.899,19.316
 		c1.617,0.104,3.235,0.212,4.857,0.212h43.868v-11.22h-44.193C424.72,353.192,420.994,350.706,420.994,344.776z"
-          fill="var(--oci-primary-color)"
+          fill="var(--compatible-primary-color)"
         />
       </g>
       <defs>
@@ -302,7 +302,7 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
       <g>
         <path
           d="M12 0C5.373 0 0 5.372 0 12c0 6.627 5.373 12 12 12s12-5.373 12-12c0-6.628-5.373-12-12-12zm0 22.46c-1.885 0-3.414-1.26-3.414-2.814h6.828c0 1.553-1.528 2.813-3.414 2.813zm5.64-3.745H6.36v-2.046h11.28v2.046zm-.04-3.098H6.391c-.037-.043-.075-.086-.111-.13-1.155-1.401-1.427-2.133-1.69-2.879-.005-.025 1.4.287 2.395.511 0 0 .513.119 1.262.255-.72-.843-1.147-1.915-1.147-3.01 0-2.406 1.845-4.508 1.18-6.207.648.053 1.34 1.367 1.387 3.422.689-.951.977-2.69.977-3.755 0-1.103.727-2.385 1.454-2.429-.648 1.069.168 1.984.894 4.256.272.854.237 2.29.447 3.201.07-1.892.395-4.652 1.595-5.605-.529 1.2.079 2.702.494 3.424.671 1.164 1.078 2.047 1.078 3.716a4.642 4.642 0 01-1.11 2.996c.792-.149 1.34-.283 1.34-.283l2.573-.502s-.374 1.538-1.81 3.019z"
-          fill="var(--oci-primary-color)"
+          fill="var(--compatible-primary-color)"
         />
       </g>
     </svg>
@@ -354,11 +354,11 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
           top: "24px",
           position: "absolute",
           background: `radial-gradient(ellipse 103.87% 77.04% at 52.56% -1.80%, 
-            ${themeVars["--oci-foreground-color"]}00 0%, 
-            ${themeVars["--oci-foreground-color"]}F5 15%, 
-            ${themeVars["--oci-foreground-color"]}66 49%, 
-            ${themeVars["--oci-foreground-color"]}F5 87%, 
-            ${themeVars["--oci-foreground-color"]}00 100%)`,
+            ${themeVars["--compatible-foreground-color"]}00 0%, 
+            ${themeVars["--compatible-foreground-color"]}F5 15%, 
+            ${themeVars["--compatible-foreground-color"]}66 49%, 
+            ${themeVars["--compatible-foreground-color"]}F5 87%, 
+            ${themeVars["--compatible-foreground-color"]}00 100%)`,
         }}
       />
 
@@ -401,4 +401,4 @@ const CompatibleServices: React.FC<CompatibleServicesProps> = ({
   );
 };
 
-export default CompatibleServices;
+export default CompatibleBackends;

@@ -44,7 +44,7 @@ export const Navigation: React.FC<{
               ? "border-b dark:border-neutral-700"
               : wide
                 ? "max-w-screen-2xl"
-                : "max-w-screen-xl"
+                : "max-w-screen-2xl"
           } mx-auto px-4 sm:px-8 lg:px-16 h-16 sm:h-24 flex justify-between items-center`}
         >
           <Link href="/" className="z-50">

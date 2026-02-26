@@ -38,7 +38,7 @@ const Functional: React.FC = () => {
 async fn send_email(task: Email) {}
 async fn send_email(task: Email) -> Result<(), MyError> {}
 async fn send_email(task: Email, worker: WorkerContext) {}
-async fn send_email(task: Email, worker: WorkerContext, data: Data<Count>) {}
+async fn send_email(task: Email, worker: WorkerContext, data: Data<State>) {}
 async fn send_email(task: Email, task_id: TaskId<Ulid>) {}
 async fn send_email(task: Email, worker: WorkerContext) -> String {}
 \

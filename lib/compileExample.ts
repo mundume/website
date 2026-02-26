@@ -1,18 +1,16 @@
 import { visit } from "unist-util-visit";
 import { execSync } from "child_process";
-import { tmpdir } from "os";
 import { join } from "path";
 import { writeFileSync, unlinkSync, mkdirSync, existsSync, readFileSync } from "fs";
 import { createHash } from "crypto";
-import type { Plugin } from "unified";
-import type { Root } from "hast";
+
+const EXAMPLES_PATH = "examples";
 
 interface CompilerOptions {
-  cargoToml?: string; // Optional Cargo.toml content for dependencies
-  edition?: string; // Rust edition (2018, 2021, etc.)
-  allowWarnings?: boolean; // Whether to treat warnings as errors
-  cacheDir?: string; // Directory to store compilation cache
-  enableCache?: boolean; // Whether to use caching (default: true)
+  edition?: string;
+  allowWarnings?: boolean;
+  cacheDir?: string;
+  enableCache?: boolean;
 }
 
 interface CompilationResult {
@@ -24,56 +22,61 @@ interface CompilationResult {
   timestamp: number;
 }
 
+interface RustBlock {
+  node: any;
+  code: string;
+  mode: 'compile' | 'inline' | null;
+  name: string | null;
+  parent: any;
+  index: number;
+  position: number;
+}
+
 // In-memory cache for this session
 const compilationCache = new Map<string, CompilationResult>();
 
-// Persistent cache directory setup
 let persistentCacheDir: string | null = null;
 
 function initializePersistentCache(cacheDir?: string): void {
   if (!cacheDir) return;
-  
+
   persistentCacheDir = cacheDir;
   if (!existsSync(persistentCacheDir)) {
     mkdirSync(persistentCacheDir, { recursive: true });
   }
 }
 
-function generateCacheKey(code: string, cargoToml: string, edition: string): string {
-  const content = `${code}\n---CARGO---\n${cargoToml}\n---EDITION---\n${edition}`;
+function generateCacheKey(code: string, edition: string): string {
+  const content = `${code}\n---EDITION---\n${edition}`;
   return createHash('sha256').update(content).digest('hex');
 }
 
 function loadFromPersistentCache(hash: string): CompilationResult | null {
   if (!persistentCacheDir) return null;
-  
+
   const cacheFile = join(persistentCacheDir, `${hash}.json`);
   if (!existsSync(cacheFile)) return null;
-  
+
   try {
     const data = readFileSync(cacheFile, 'utf-8');
     const result = JSON.parse(data) as CompilationResult;
-    
-    // Cache expires after 24 hours
+
     const maxAge = 24 * 60 * 60 * 1000;
     if (Date.now() - result.timestamp > maxAge) {
       unlinkSync(cacheFile);
       return null;
     }
-    
+
     return result;
-  } catch (error) {
-    // If cache file is corrupted, remove it
-    try {
-      unlinkSync(cacheFile);
-    } catch {}
+  } catch {
+    try { unlinkSync(cacheFile); } catch { }
     return null;
   }
 }
 
 function saveToPersistentCache(result: CompilationResult): void {
   if (!persistentCacheDir) return;
-  
+
   const cacheFile = join(persistentCacheDir, `${result.hash}.json`);
   try {
     writeFileSync(cacheFile, JSON.stringify(result), 'utf-8');
@@ -84,251 +87,282 @@ function saveToPersistentCache(result: CompilationResult): void {
 
 function getCachedResult(hash: string, enableCache: boolean): CompilationResult | null {
   if (!enableCache) return null;
-  
-  // Check in-memory cache first
+
   const memoryResult = compilationCache.get(hash);
   if (memoryResult) return memoryResult;
-  
-  // Check persistent cache
+
   const persistentResult = loadFromPersistentCache(hash);
   if (persistentResult) {
-    // Load into memory cache for faster access
     compilationCache.set(hash, persistentResult);
     return persistentResult;
   }
-  
+
   return null;
 }
 
 function cacheResult(result: CompilationResult, enableCache: boolean): void {
   if (!enableCache) return;
-  
-  // Store in memory cache
   compilationCache.set(result.hash, result);
-  
-  // Store in persistent cache
   saveToPersistentCache(result);
 }
 
-// Shared compilation workspace to avoid creating multiple temp directories
-let sharedWorkspace: string | null = null;
-let workspaceRefCount = 0;
+function parseMetaAttributes(meta: string): { mode: 'compile' | 'inline' | null; name: string | null; fileName: string | null } {
+  if (!meta) return { mode: null, name: null, fileName: null };
 
-function getSharedWorkspace(cargoToml: string): string {
-  if (!sharedWorkspace) {
-    sharedWorkspace = join(tmpdir(), `rust-workspace-${Date.now()}`);
-    mkdirSync(sharedWorkspace, { recursive: true });
-    
-    // Create Cargo.toml once
-    const cargoTomlPath = join(sharedWorkspace, "Cargo.toml");
-    writeFileSync(cargoTomlPath, cargoToml, "utf-8");
-    
-    // Create src directory
-    const srcDir = join(sharedWorkspace, "src");
-    mkdirSync(srcDir, { recursive: true });
-  }
-  workspaceRefCount++;
-  return sharedWorkspace;
+  const modeMatch = meta.match(/mode=["']?(compile|inline)["']?/);
+  const mode = modeMatch ? (modeMatch[1] as 'compile' | 'inline') : null;
+
+  const nameMatch = meta.match(/name=["']?([^"'\s]+)["']?/);
+  const name = nameMatch ? nameMatch[1] : null;
+
+  const fileNameMatch = meta.match(/fileName=["']?([^"'\s]+)["']?/);
+  const fileName = fileNameMatch ? fileNameMatch[1] : null;
+
+  return { mode, name, fileName };
 }
 
-function releaseSharedWorkspace(): void {
-  workspaceRefCount--;
-  if (workspaceRefCount <= 0 && sharedWorkspace) {
-    try {
-      // Clean up the shared workspace
-      execSync(`rm -rf "${sharedWorkspace}"`, { stdio: 'ignore' });
-    } catch {
-      // Ignore cleanup errors
+function processInlineReferences(
+  code: string,
+  inlineBlocksMap: Map<string, string>
+): { processedCode: string; referencedBlocks: Set<string> } {
+  const lines = code.split('\n');
+  const processedLines: string[] = [];
+  const referencedBlocks = new Set<string>();
+
+  for (const line of lines) {
+    const inlineMatch = line.match(/^(\s*)\/\/\s*\[!code\s+inline:([^\]]+)\]/);
+
+    if (inlineMatch) {
+      const indentation = inlineMatch[1];
+      const blockName = inlineMatch[2].trim();
+      const inlineCode = inlineBlocksMap.get(blockName);
+
+      if (inlineCode) {
+        const inlineLines = inlineCode.split('\n');
+        const indentedLines = inlineLines.map(inlineLine =>
+          inlineLine.trim() === '' ? inlineLine : indentation + inlineLine
+        );
+        processedLines.push(...indentedLines);
+        referencedBlocks.add(blockName);
+      } else {
+        processedLines.push(`${indentation}// ERROR: inline block '${blockName}' not found`);
+        console.warn(`Warning: Inline block '${blockName}' referenced but not found`);
+      }
+    } else {
+      processedLines.push(line);
     }
-    sharedWorkspace = null;
-    workspaceRefCount = 0;
   }
+
+  return { processedCode: processedLines.join('\n'), referencedBlocks };
 }
 
 function compileRustCode(
-  code: string, 
-  cargoToml: string, 
+  code: string,
   hash: string,
-  workspace: string
+  exampleLibPath: string
 ): CompilationResult {
-  const mainRsPath = join(workspace, "src", `${hash}.rs`);
-  const cargoTomlPath = join(workspace, "Cargo.toml");
-  
+  const binPath = join(exampleLibPath, "src", "bin", `${hash}.rs`);
+  const cargoTomlPath = join(exampleLibPath, "Cargo.toml");
+
   try {
-    // Wrap code in main function if it doesn't have one
     let finalCode = code;
-    if (
-      !code.includes("fn main") &&
-      !code.includes("mod ") &&
-      !code.includes("use ")
-    ) {
+    if (!code.includes("fn main")) {
       finalCode = `fn main() {\n${code}\n}`;
     }
 
-    // Write the specific code file
-    writeFileSync(mainRsPath, finalCode, "utf-8");
-
-    // Update Cargo.toml to include this binary
-    let currentCargoToml = cargoToml;
-    if (!currentCargoToml.includes('[[bin]]')) {
-      currentCargoToml += `\n[[bin]]\nname = "${hash}"\npath = "src/${hash}.rs"\n`;
-    } else {
-      currentCargoToml += `\n[[bin]]\nname = "${hash}"\npath = "src/${hash}.rs"\n`;
-    }
-    writeFileSync(cargoTomlPath, currentCargoToml, "utf-8");
-
-    let compilationResult: CompilationResult;
+    writeFileSync(binPath, finalCode, "utf-8");
 
     try {
-      // Use cargo check for faster compilation
       const output = execSync(
-        `cargo check --bin ${hash} --manifest-path "${cargoTomlPath}"`,
-        { 
-          cwd: workspace,
+        `cargo check --bin ${hash} --manifest-path "../${cargoTomlPath}"`,
+        {
+          cwd: exampleLibPath,
           stdio: "pipe",
           encoding: "utf-8",
-          timeout: 30000 // 30 second timeout
+          timeout: 30000,
         }
       );
 
       const warnings = output.toString()
-        .split('\n')
-        .filter(line => line.includes('warning:'))
-        .map(line => line.trim());
+        .split("\n")
+        .filter((line) => line.includes("warning:"))
+        .map((line) => line.trim());
 
-      compilationResult = {
+      return {
         success: true,
         output: output.toString(),
         warnings,
         errors: [],
         hash,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-
     } catch (error: any) {
-      const stderr = error.stderr?.toString() || error.message || 'Unknown error';
+      const stderr = error.stderr?.toString() || error.message || "Unknown error";
+
       const errors = stderr
-        .split('\n')
-        .filter(line => line.includes('error:') || line.includes('error['))
-        .map(line => line.trim());
+        .split("\n")
+        .filter((line) => line.includes("error:") || line.includes("error["))
+        .map((line) => line.trim());
 
       const warnings = stderr
-        .split('\n')
-        .filter(line => line.includes('warning:'))
-        .map(line => line.trim());
+        .split("\n")
+        .filter((line) => line.includes("warning:"))
+        .map((line) => line.trim());
 
-      compilationResult = {
+      return {
         success: false,
         output: stderr,
         warnings,
         errors,
         hash,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
-
-    // Clean up the specific file
-    try {
-      unlinkSync(mainRsPath);
-    } catch {}
-
-    return compilationResult;
-
   } catch (error: any) {
     return {
       success: false,
-      output: error.message || 'Unknown error',
+      output: error.message || "Unknown error",
       warnings: [],
-      errors: [error.message || 'Unknown error'],
+      errors: [error.message || "Unknown error"],
       hash,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
+  } finally {
+    try { unlinkSync(binPath); } catch { }
   }
 }
 
-export function rehypeExampleCompiler(options: CompilerOptions = {}) {
-  const { 
-    cargoToml = `[package]
-name = "example"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-`, 
-    edition = "2021",
+export function reremarkExampleCompiler(options: CompilerOptions = {}) {
+  const {
+    edition = "2024",
     allowWarnings = true,
     cacheDir,
     enableCache = true
   } = options;
 
-  // Initialize persistent cache
   initializePersistentCache(cacheDir);
 
-  return function (tree, { data }) {
-    // Collect all rust compile blocks first for batch processing
-    const rustBlocks: { node: any, code: string, hash: string }[] = [];
+  return function (tree: any, file: any) {
+    const rustBlocks: RustBlock[] = [];
+    let positionCounter = 0;
 
     visit(tree, "code", function (node, index, parent) {
-      if (node?.lang === "rust" && node?.meta?.includes("compile")) {
-        const rustCode = node.value;
+      if (node?.lang === "rust") {
+        const { mode, name } = parseMetaAttributes(node.meta || '');
 
-        if (!rustCode.trim()) {
-          return;
+        if (mode === 'compile' || mode === 'inline') {
+          const rustCode = node.value;
+          if (!rustCode.trim()) return;
+
+          rustBlocks.push({
+            node,
+            code: rustCode,
+            mode,
+            name,
+            parent,
+            index: index || 0,
+            position: positionCounter++
+          });
         }
-
-        const hash = generateCacheKey(rustCode, cargoToml, edition);
-        rustBlocks.push({ node, code: rustCode, hash });
       }
     });
 
-    // Process all blocks with caching
-    if (rustBlocks.length > 0) {
-      const workspace = getSharedWorkspace(cargoToml);
+    const compileBlocks = rustBlocks.filter(b => b.mode === 'compile');
 
-      rustBlocks.forEach(block => {
-        try {
-          // Check cache first
-          let compilationResult = getCachedResult(block.hash, enableCache);
-          
-          if (!compilationResult) {
-            // Not in cache, compile it
-            console.log(`Compiling Rust code (hash: ${block.hash.substring(0, 8)}...)`);
-            compilationResult = compileRustCode(block.code, cargoToml, block.hash, workspace);
-            cacheResult(compilationResult, enableCache);
-          } else {
-            console.log(`Using cached result (hash: ${block.hash.substring(0, 8)}...)`);
-          }
+    if (compileBlocks.length === 0) return tree;
 
-          // Update the node's meta with compilation result
-          const resultStatus = compilationResult.success ? "Success" : "Fail";
-          if (block.node.meta.includes('compile-result=')) {
-            // Replace existing result
-            block.node.meta = block.node.meta.replace(/compile-result="[^"]*"/, `compile-result="${resultStatus}"`);
-          } else {
-            // Add new result
-            block.node.meta = block.node.meta + ` compile-result="${resultStatus}"`;
-          }
-
-          // Optionally add more detailed info to meta
-          if (compilationResult.warnings.length > 0) {
-            block.node.meta += ` compile-warnings="${compilationResult.warnings.length}"`;
-          }
-          if (compilationResult.errors.length > 0) {
-            block.node.meta += ` compile-errors="${compilationResult.errors.length}"`;
-          }
-
-        } catch (error: any) {
-          console.error("Failed to compile Rust code:", error);
-          block.node.meta = block.node.meta + ` compile-result="Error"`;
-        }
+    if (compileBlocks.length > 1) {
+      console.error('Error: Multiple mode="compile" blocks found. Only one is allowed.');
+      compileBlocks.forEach(block => {
+        block.node.meta = (block.node.meta || '') + ' compile-result="Error" compile-error="Multiple compile blocks"';
       });
-
-      // Release the shared workspace
-      releaseSharedWorkspace();
+      return tree;
     }
+
+    const compileBlock = compileBlocks[0];
+
+    const inlineBlocks = rustBlocks.filter(b => b.mode === 'inline');
+    const inlineBlocksMap = new Map<string, string>();
+
+    inlineBlocks.forEach(block => {
+      if (!block.name) {
+        console.warn(`Warning: Inline block at position ${block.position} has no name and cannot be referenced`);
+      } else {
+        if (inlineBlocksMap.has(block.name)) {
+          console.warn(`Warning: Duplicate inline block name '${block.name}' - using the last occurrence`);
+        }
+        inlineBlocksMap.set(block.name, block.code);
+      }
+    });
+
+    const { processedCode, referencedBlocks } = processInlineReferences(
+      compileBlock.code,
+      inlineBlocksMap
+    );
+
+    compileBlock.node.value = processedCode;
+
+    const hash = generateCacheKey(processedCode, edition);
+
+    let compilationResult = getCachedResult(hash, enableCache);
+
+    if (!compilationResult) {
+      console.log(`Compiling Rust code (hash: ${hash.substring(0, 8)}...) with ${referencedBlocks.size} inline references`);
+      compilationResult = compileRustCode(processedCode, hash, EXAMPLES_PATH);
+      cacheResult(compilationResult, enableCache);
+    } else {
+      console.log(`Using cached result (hash: ${hash.substring(0, 8)}...)`);
+    }
+
+    if (!compilationResult.success) console.error(compilationResult.errors);
+
+    const resultStatus = compilationResult.success ? "Success" : "Fail";
+    if (compileBlock.node.meta.includes('compile-result=')) {
+      compileBlock.node.meta = compileBlock.node.meta.replace(/compile-result=["']?[^"'\s]*["']?/, `compile-result="${resultStatus}"`);
+    } else {
+      compileBlock.node.meta = compileBlock.node.meta + ` compile-result="${resultStatus}"`;
+    }
+
+    if (compilationResult.warnings.length > 0) {
+      compileBlock.node.meta += ` compile-warnings="${compilationResult.warnings.length}"`;
+    }
+    if (compilationResult.errors.length > 0) {
+      compileBlock.node.meta += ` compile-errors="${compilationResult.errors.length}"`;
+    }
+
+    inlineBlocks.forEach(block => {
+      if (block.name && referencedBlocks.has(block.name)) {
+        if (!block.node.meta.includes('compile-referenced')) {
+          block.node.meta = (block.node.meta || '') + ' compile-referenced="true"';
+        }
+      }
+    });
 
     return tree;
   };
 }
 
-export default rehypeExampleCompiler;
+export default reremarkExampleCompiler;
+
+/**
+ * Parse meta string to extract compile metadata for rehypeShiki
+ */
+export function parseCompileMetaString(metaString: string) {
+  if (!metaString) return null;
+
+  const result: Record<string, any> = {};
+
+  const compileFileMatch = metaString.match(/fileName="([^"]*)"/);
+  if (compileFileMatch) result.fileName = compileFileMatch[1];
+
+  const compileResultMatch = metaString.match(/compile-result="([^"]*)"/);
+  if (compileResultMatch) result.compileResult = compileResultMatch[1];
+
+  const compileWarningsMatch = metaString.match(/compile-warnings="([^"]*)"/);
+  if (compileWarningsMatch) result.compileWarnings = compileWarningsMatch[1];
+
+  const compileErrorsMatch = metaString.match(/compile-errors="([^"]*)"/);
+  if (compileErrorsMatch) result.compileErrors = compileErrorsMatch[1];
+
+  return Object.keys(result).length > 0 ? result : null;
+}
