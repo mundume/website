@@ -1,18 +1,13 @@
 import { Divider } from "@/components/layout/divider"
 import { Navigation } from "@/components/layout/navigation"
-// import { Catch } from "@/components/sections/catch"
-// import { Community } from "@/components/sections/community"
 import { Ergonomics } from "@/components/sections/ergonomics"
 import { Features } from "@/components/sections/features"
-// import { CTA } from "@/components/sections/cta"
-// import { Examples } from "@/components/sections/examples"
 import { FAQ } from "@/components/sections/faq"
-
 import { Hero } from "@/components/sections/hero"
 import { PricingSection } from "@/components/sections/pricing"
-import { Testimonials } from "@/components/sections/Testimonial"
+import { Testimonials } from "@/components/sections/testimonial"
 import { AnimatedSection } from "@/components/atoms/animated-section"
-// import { Tweets } from "@/components/sections/tweets"
+import Link from "next/link"
 
 export default function HomePage() {
   return (
@@ -32,6 +27,12 @@ export default function HomePage() {
         </AnimatedSection>
         <AnimatedSection delay={0.2}>
           <PricingSection />
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Link href='/pricing#detailed-comparison' className="mx-auto px-6 py-3 rounded-md border border-border text-foreground font-semibold hover:bg-muted transition-colors">
+              View Paid Features
+            </Link>
+          </div>
+
         </AnimatedSection>
         <AnimatedSection delay={0.2}>
           <Testimonials />
@@ -49,7 +50,7 @@ export default function HomePage() {
         {/* <Tweets /> */}
         {/* <Catch /> */}
         {/* <FAQ />
-        <Community />
+        
         <CTA /> */}
       </main>
     </>

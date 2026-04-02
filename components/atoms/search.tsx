@@ -14,7 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const searchClient = algoliasearch(
-  "AAAAAS",
+  "SSQCBBFN59",
   process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!
 );
 
@@ -76,10 +76,10 @@ export const Search: FC<{ className?: string }> = ({ className = "" }) => {
             className="relative mt-24 w-full max-w-3xl mx-auto bg-gradient-to-br from-zinc-200 to-zinc-200 dark:from-zinc-600 dark:to-zinc-900 p-px rounded-sm"
             style={{ height: "calc(100vh - 12rem)", maxHeight: "32rem" }}
           >
-            <div className="h-full w-full bg-zinc-50 dark:bg-zinc-900 flex flex-colrounded-sm overflow-hidden">
+            <div className="h-full w-full bg-zinc-50 dark:bg-zinc-900 flex flex-col rounded-sm overflow-hidden">
               <InstantSearch
                 searchClient={searchClient}
-                indexName="effect-docs"
+                indexName="apalis-docs"
               >
                 <div className="flex items-center p-4 border-b border-zinc-200 dark:border-zinc-800">
                   <Icon name="search" className="shrink-0 h-4" />

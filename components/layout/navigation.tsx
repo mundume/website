@@ -4,7 +4,6 @@ import Link from "next/link"
 import { Logo } from "../atoms/logo"
 import { Icon } from "../icons"
 import { Search } from "../atoms/search"
-// import { MobileMenu } from "./mobile-menu"
 import { usePathname } from "next/navigation"
 import React from "react"
 
@@ -22,7 +21,7 @@ const links: Array<NavigationLink> = [
 
 const socials = [
   { name: "GitHub", icon: "github", href: "https://github.com/apalis-dev" },
-  { name: "Discord", icon: "discord", href: "https://discord.gg/apalis" }
+  { name: "Discord", icon: "discord", href: "https://discord.gg/W29BYSXXmp" }
 ]
 
 export const Navigation: React.FC<{
@@ -36,7 +35,7 @@ export const Navigation: React.FC<{
       <header
         className={`${
           inline ? "relative" : "fixed top-0 inset-x-0"
-        } backdrop-blur z-30 bg-white/70 dark:bg-[#09090B]/70 text-zinc-700 dark:text-zinc-400`}
+        } z-30 backdrop-blur-xl border-b border-border/40 bg-zinc-50 dark:bg-black text-zinc-700 dark:text-zinc-400`}
       >
         <div
           className={`w-full ${
@@ -50,8 +49,7 @@ export const Navigation: React.FC<{
           <Link href="/" className="z-50">
             <Logo className="hidden dark:block h-7 sm:h-8" />
           </Link>
-          {/* <MobileMenu menu={links} socials={socials} /> */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-3">
             <NavigationMenu />
             {searchBox && <Search className="w-56" />}
             <div className="flex items-center gap-4">
@@ -103,10 +101,10 @@ function NavigationLink({ name, href, reload }: NavigationLink) {
   return (
     <Component
       href={href}
-      className={`flex items-start ${
+      className={`h-8 cursor-pointer flex border bg-black border-[#333333] hover:border-white/50 transition duration-300 ease-in-out rounded items-center px-3 text-[13px] justify-center ${
         pathname?.startsWith(href)
           ? "text-black font-normal dark:text-white dark:font-light"
-          : "button-hover"
+          : ""
       }`}
     >
       <span>{name}</span>

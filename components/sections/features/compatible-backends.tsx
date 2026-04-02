@@ -293,10 +293,12 @@ const CompatibleBackends: React.FC<CompatibleBackendsProps> = ({
 
   const PrometheusLogo = (
     <svg
+      className="w-8 h-8"
       width="36"
       height="38"
       viewBox="0 0 512 512"
       fill="none"
+
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>

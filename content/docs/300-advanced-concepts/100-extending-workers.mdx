@@ -32,7 +32,9 @@ use apalis::prelude::*;
 use tower::Layer;
 use tracing::info;
 
-struct LoggingLayer;
+struct LoggingLayer {
+    namespace: String,
+};
 
 impl<S> Layer<S> for LoggingLayer {
     type Service = LoggingService<S>;
@@ -89,13 +91,9 @@ To apply the logging middleware, use the `.layer(...)` method when creating the 
 
 ```rust
 let worker = WorkerBuilder::new("email_worker")
-    .layer(LoggingLayer)
+    .layer(LoggingLayer::new())
     .build(|task: Email| async move {
         println!("Executing task: {:?}", task);
         Ok(())
     });
 ```
-
-## **Next Steps**
-
-By leveraging middleware, you can enhance worker functionality while keeping task execution clean and modular. In the next section, we will explore **task monitoring** and how to track worker performance using apalis’s monitoring features.

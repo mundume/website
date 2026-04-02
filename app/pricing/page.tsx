@@ -1,255 +1,197 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 
 import { CheckCircleIcon } from '@/components/icons/check-circle';
+import { PricingSection } from "@/components/sections/pricing"
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
-const plans = [
+const comparisonTable = [
   {
-    name: 'Billed annually',
-    price: '$150',
-    isRecommended: true,
+    category: 'Core Functionality',
+    features: [
+      { name: 'Job Queues', free: true, pro: true, ultra: true },
+      { name: 'Multiple Backends', free: true, pro: true, ultra: true },
+      { name: 'Job Scheduling (Cron)', free: true, pro: true, ultra: true },
+      { name: 'Realtime Web UI', free: true, pro: true, ultra: true },
+      { name: 'Advanced Retry Logic', free: false, pro: true, ultra: true },
+    ],
   },
   {
-    name: 'Billed monthly',
-    price: '$200',
-    isRecommended: false,
-  },
-];
-
-const features = [
-  {
-    id: 1,
-    name: '24/7 technical support',
+    category: 'Performance & Scaling',
+    features: [
+      { name: 'Concurreny', free: true, pro: true, ultra: true },
+      { name: 'Rate Limitting', free: true, pro: true, ultra: true },
+      { name: 'Batch Processing', free: false, pro: true, ultra: true },
+      { name: 'Bulk Job Inserts', free: "Not Guaranteed", pro: true, ultra: true },
+      { name: 'Pausable/Resumable Queues', free: false, pro: true, ultra: true },
+    ],
   },
   {
-    id: 2,
-    name: 'Performance optimization consulting',
+    category: 'Advanced Features',
+    features: [
+      { name: 'Job Prioritization', free: false, pro: true, ultra: true },
+      { name: 'Dead Letter Queue Handling', free: false, pro: true, ultra: true },
+      { name: 'Custom Job Middleware', free: true, pro: true, ultra: true },
+      { name: 'Encryption at Rest', free: false, pro: false, ultra: true },
+      { name: 'Advanced Workflow Coordination', free: false, pro: false, ultra: true },
+    ],
   },
   {
-    id: 3,
-    name: 'Custom feature development',
+    category: 'Observability & Monitoring',
+    features: [
+      { name: 'Job Logs & History', free: false, pro: true, ultra: true },
+      { name: 'Error Tracking & Alerts', free: true, pro: true, ultra: true },
+      { name: 'Performance Metrics', free: false, pro: true, ultra: true },
+      { name: 'Scoped Web UI', free: false, pro: true, ultra: true },
+      { name: 'Authentication on Web UI', free: false, pro: true, ultra: true },
+      { name: 'Custom Telemetry Backends', free: false, pro: true, ultra: true },
+      { name: 'Logs Retention (months)', free: false, pro: '1', ultra: '3+' },
+    ],
   },
   {
-    id: 4,
-    name: 'Advanced analytics',
+    category: 'Support & SLA',
+    features: [
+      { name: 'Community Support (GitHub)', free: true, pro: true, ultra: true },
+      { name: 'Email & Chat Support', free: false, pro: true, ultra: true },
+      { name: 'Priority Response Time', free: false, pro: '24h', ultra: '2h' },
+      { name: 'Dedicated Account Manager', free: false, pro: false, ultra: true },
+      { name: 'SLA Guarantees', free: false, pro: false, ultra: true },
+    ],
   },
-];
+  {
+    category: 'Customization & Enterprise',
+    features: [
+      { name: 'Custom Feature Requests', free: false, pro: true, ultra: true },
+      { name: 'Custom Telemetry', free: false, pro: true, ultra: true },
+      { name: 'Collaborative Coding Sessions', free: false, pro: false, ultra: true },
+      { name: 'Priority Feature requests', free: false, pro: false, ultra: true },
+    ],
+  },
+]
 
 export default function Pro() {
-  const [selected, setSelected] = useState(plans[0]);
-  return (
-    <>
-      <div className="container text-white grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="p-6">
-          <h3 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Unlock all features
-          </h3>
-          <p className="mt-2 text-tremor-default leading-6 text-tremor-content dark:text-dark-tremor-content">
-            Get the full potential of your data with our enhanced features that
-            enable advanced data analytics and informed decision-making.
+  return <div className="min-h-screen w-full">
+    <PricingSection />
+    {/* Feature Comparison Section */}
+    <section className="w-full px-5 py-12 md:py-20 flex flex-col justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center gap-12 p-2">
+        <div className="flex flex-col justify-center items-center gap-2">
+          <h2 id='detailed-comparison' className="text-center text-foreground text-4xl md:text-5xl font-semibold leading-tight">
+            Detailed Feature Comparison
+          </h2>
+          <p className="text-center text-muted-foreground text-sm md:text-base font-medium leading-relaxed">
+            See exactly what's included in each plan
           </p>
-          <div className="mt-8 space-y-6">
-            <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Batching &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Bulk task operations and batch processing optimizations
-              </p>
-            </div>
-            <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Unique Tasks &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Deduplicate tasks to only allow running once
-              </p>
-            </div>
-            <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Apalis Pro Dashboard &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Real-time dashboard with detailed task execution statistics
-              </p>
-            </div>
-            <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Task Execution History &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Detailed logs of task runs, durations, and outcomes
-              </p>
-            </div>
-             <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  SLA Monitoring &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Service level agreement tracking with breach notifications
-              </p>
-            </div>
-            <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Dead Letter Queues &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Automatic routing of failed tasks to separate queues for analysis
-              </p>
-            </div>
-             <div className="relative border-l-2 border-tremor-border pl-4 dark:border-dark-tremor-border">
-              <h4 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                <a href="#" className="focus:outline-none">
-                  {/* Extend link to entire card */}
-                  <span className="absolute inset-0" aria-hidden={true} />
-                  Advanced Rate Limiting &#8594;
-                </a>
-              </h4>
-              <p className="mt-1 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                Apply advanced rate limiting strategies
-              </p>
-            </div>
-          </div>
         </div>
-        <form method="POST" action="#">
-          <div className="items-center rounded-none-tremor-default border border-tremor-border bg-tremor-background-muted p-6 dark:border-dark-tremor-border dark:bg-dark-tremor-background h-full">
-            <h3 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Professional Plan Subscription
-            </h3>
-            <RadioGroup
-              value={selected}
-              onChange={setSelected}
-              name="plan"
-              className="mt-4"
-            >
-              <RadioGroup.Label className="sr-only">
-                Plan details
-              </RadioGroup.Label>
-              <div className="space-y-4">
-                {plans.map((plan) => (
-                  <RadioGroup.Option
-                    key={plan.name}
-                    value={plan}
-                    className={({ active }) =>
-                      classNames(
-                        active
-                          ? 'border-tremor-brand-subtle ring-2 ring-tremor-brand-muted active:border-tremor-brand-subtle dark:border-dark-tremor-brand-subtle dark:ring-dark-tremor-brand-muted focus:dark:border-dark-tremor-brand-subtle'
-                          : 'border-tremor-border dark:border-dark-tremor-border',
-                        'relative block cursor-pointer rounded-none-tremor-default border bg-tremor-background transition dark:bg-dark-tremor-background',
-                      )
-                    }
-                  >
-                    {({ active, checked }) => (
-                      <>
-                        <div className="flex items-center justify-between space-x-6 px-4 py-4 sm:px-6">
-                          <div className="flex items-center space-x-3 truncate">
-                            <span
-                              className={classNames(
-                                checked
-                                  ? 'border-transparent bg-tremor-brand'
-                                  : 'border-tremor-border bg-tremor-background dark:border-dark-tremor-border dark:bg-dark-tremor-background',
-                                'flex size-4 shrink-0 items-center justify-center rounded-sm border',
-                              )}
-                              aria-hidden={true}
-                            >
-                              <span className="size-1.5 rounded-sm bg-tremor-background dark:bg-dark-tremor-background" />
-                            </span>
-                            <div className="block items-center space-x-3 truncate lg:flex">
-                              <RadioGroup.Label
-                                as="span"
-                                className="truncate text-tremor-default font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong"
-                              >
-                                {plan.name}
-                              </RadioGroup.Label>
-                              {plan.isRecommended ? (
-                                <span className="hidden items-center rounded-none-tremor-small bg-tremor-brand-faint px-2 py-1 text-tremor-label font-medium text-tremor-brand ring-1 ring-inset ring-tremor-brand-muted dark:bg-dark-tremor-brand-faint dark:text-dark-tremor-brand dark:ring-dark-tremor-brand-muted lg:inline-flex">
-                                  Save 25%
-                                </span>
-                              ) : null}
+
+        <div className="w-full overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left px-6 py-4 font-semibold text-foreground bg-muted/30 rounded-tl-lg">
+                  Features
+                </th>
+                <th className="text-center px-6 py-4 font-semibold text-foreground bg-muted/30">
+                  Free
+                </th>
+                <th className="text-center px-6 py-4 font-semibold text-foreground bg-muted/30">
+                  Pro
+                </th>
+                <th className="text-center px-6 py-4 font-semibold text-foreground bg-muted/30 rounded-tr-lg">
+                  Ultra
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonTable.map((section, sectionIdx) => (
+                <Fragment key={section.category}>
+                  <tr >
+                    <td colSpan={4} className="px-6 py-4 bg-accent/5 border-b border-border">
+                      <h3 className="text-sm font-semibold text-foreground">{section.category}</h3>
+                    </td>
+                  </tr>
+                  {section.features.map((feature, idx) => (
+                    <tr
+                      key={feature.name}
+                      className="border-b border-border hover:bg-muted/20 transition-colors"
+                    >
+                      <td className="px-6 py-4 text-sm text-foreground font-medium">
+                        {feature.name}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {typeof feature.free === 'boolean' ? (
+                          feature.free ? (
+                            <div className="flex justify-center">
+                              <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
+                                <div className="w-2.5 h-2.5 rounded-full bg-accent" />
+                              </div>
                             </div>
-                          </div>
-                          <RadioGroup.Description
-                            as="p"
-                            className="flex items-baseline"
-                          >
-                            <span className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong sm:text-tremor-title">
-                              {plan.price}
-                            </span>
-                            <span className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                              /mo
-                            </span>
-                          </RadioGroup.Description>
-                        </div>
-                        <span
-                          className={classNames(
-                            active ? 'border' : 'border-2',
-                            checked
-                              ? 'border-tremor-brand dark:border-dark-tremor-brand'
-                              : 'border-transparent',
-                            'pointer-events-none absolute -inset-px rounded-none-tremor-default',
-                          )}
-                          aria-hidden={true}
-                        />
-                      </>
-                    )}
-                  </RadioGroup.Option>
-                ))}
-              </div>
-            </RadioGroup>
-            <ul className="mt-4 divide-y-0 text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-              {features.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex justify-start space-x-2 py-2.5"
-                >
-                  <CheckCircleIcon
-                    className="size-5 shrink-0 text-tremor-brand dark:text-dark-tremor-brand"
-                    aria-hidden={true}
-                  />
-                  <span>{item.name}</span>
-                </li>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )
+                        ) : (
+                          <span className="text-sm text-foreground font-medium">{feature.free}</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {typeof feature.pro === 'boolean' ? (
+                          feature.pro ? (
+                            <div className="flex justify-center">
+                              <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
+                                <div className="w-2.5 h-2.5 rounded-full bg-accent" />
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )
+                        ) : (
+                          <span className="text-sm text-foreground font-medium">{feature.pro}</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {typeof feature.ultra === 'boolean' ? (
+                          feature.ultra ? (
+                            <div className="flex justify-center">
+                              <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
+                                <div className="w-2.5 h-2.5 rounded-full bg-accent" />
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )
+                        ) : (
+                          <span className="text-sm text-foreground font-medium">{feature.ultra}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </Fragment>
               ))}
-            </ul>
-            {/* <Divider /> */}
-            <button
-              type="submit"
-              className="w-full whitespace-nowrap rounded-none-tremor-small bg-tremor-brand py-2.5 text-center text-tremor-default font-medium text-tremor-brand-inverted shadow-tremor-input hover:bg-tremor-brand-emphasis dark:bg-dark-tremor-brand dark:text-dark-tremor-brand-inverted dark:shadow-dark-tremor-input dark:hover:bg-dark-tremor-brand-emphasis"
-            >
-              Buy and upgrade
-            </button>
-          </div>
-        </form>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </>
-  );
+    </section>
+
+
+    {/* CTA Section */}
+    <section className="w-full px-5 py-12 md:py-20 flex flex-col justify-center items-center">
+      <div className="max-w-2xl w-full flex flex-col justify-center items-center gap-8 p-8 md:p-12 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+        <div className="flex flex-col justify-center items-center gap-3">
+          <h2 className="text-center text-foreground text-3xl md:text-4xl font-semibold">
+            Ready to get started?
+          </h2>
+          <p className="text-center text-muted-foreground text-base md:text-lg">
+            Choose your plan and start building today. Upgrade or downgrade anytime.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <a href='mailto:sales@apalis.dev' className="mx-auto px-6 py-3 rounded-md border border-border text-foreground font-semibold hover:bg-muted transition-colors">
+            Talk to Sales
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
 }

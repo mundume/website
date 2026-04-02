@@ -23,7 +23,7 @@ Apalis provides two primary methods for running workers, each suited to differen
 
 The `run()` method starts the worker and blocks until it completes or is stopped. This is the simplest approach for straightforward task processing:
 
-```rust name="future_worker" mode="inline"    
+```rust {7} name="future_worker" mode="inline"    
 let future_worker = WorkerBuilder::new("future-worker")
     .backend(storage)
     .on_event(|ctx, event| {
@@ -37,7 +37,7 @@ let future_worker = WorkerBuilder::new("future-worker")
 
 The `stream()` method returns an event stream that allows you to monitor worker events in real-time and maintain more control over the worker lifecycle:
 
-```rust name="stream_worker" mode="inline"
+```rust {9,14} name="stream_worker" mode="inline"
 let worker = WorkerBuilder::new("streaming-worker")
     .backend(storage)
     .on_event(|ctx, event| {
@@ -81,7 +81,7 @@ Workers can be stopped in several ways:
 
 Use the `WorkerContext` to stop the worker from within a task:
 
-```rust
+```rust {10}
 async fn controlled_task(
     task: Email,
     worker: WorkerContext,
@@ -104,7 +104,7 @@ More of this is the [complete lifecycle section](/docs/guides/workers/lifecycle)
 
 Workers automatically respond to common termination signals:
 
-```rust name="signal_worker" mode="inline"
+```rust {4} name="signal_worker" mode="inline"
 let worker = WorkerBuilder::new("signal-worker")
     .backend(storage)
     .build(send_email)
@@ -116,14 +116,18 @@ Basically run_until accepts any `Future` which when resolves starts the worker s
 
 `WorkerContext` offers a way to resume workers. By default one doesnt have access to the context outside the task function, but in some cases you may want to pass the worker context into other parts.
 
-```rust
+```rust {8,11}
 let mut ctx = WorkerContext::new::<Service>(&self.name);
 let worker = WorkerBuilder::new("timeout-worker")
     .backend(storage)
     .build(send_email)
     .run_with_ctx(&mut ctx);
 
-/// Use ctx 
+// Use ctx 
+ctx.pause()?
+
+// Later
+ctx.resume()?
 ```
 
 
@@ -131,7 +135,7 @@ let worker = WorkerBuilder::new("timeout-worker")
 
 Monitor worker lifecycle events for observability:
 
-```rust name="event_worker" mode="inline"
+```rust {3} name="event_worker" mode="inline"
 let worker = WorkerBuilder::new("monitored-worker")
     .backend(storage)
     .on_event(|ctx, event| {

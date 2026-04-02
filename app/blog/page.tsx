@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { Fragment } from "react"
 
 const content = {
   heading: "Apalis Blog",
@@ -54,7 +55,7 @@ export default function Blog() {
                   <div className="text-sm ml-2">
                     <span>By </span>
                     {authors.map(({ name }, index) => (
-                      <>
+                      <Fragment key={index}>
                         {authors.length !== 1 && index === authors.length - 1 && <span>and </span>}
                         {index > 0 && index < authors.length - 1 && (
                           <span>, </span>
@@ -65,7 +66,7 @@ export default function Blog() {
                         >
                           {name}{" "}
                         </span>
-                      </>
+                      </Fragment>
                     ))}
                   </div>
                 </div>

@@ -19,42 +19,10 @@ const testimonials = [
   },
   {
     quote:
-      "Pointer’s multi-agent coding feature has been a game changer. We’re fixing complex bugs in hours instead of spending entire sprints on them.",
-    name: "Cameron Williamson",
-    company: "IBM",
-    avatar: "/images/avatars/cameron-williamson.png",
-    type: "small-dark",
-  },
-  {
-    quote:
-      "We no longer juggle multiple tools. Pointer brought all our integrations together in one place, which simplified our entire workflow.",
-    name: "Robert Fox",
-    company: "MasterCard",
-    avatar: "/images/avatars/robert-fox.png",
-    type: "small-dark",
-  },
-  {
-    quote:
-      "We started with the free plan just to test it out, but within a week we upgraded to Pro. Now, we can’t imagine coding without it",
-    name: "Darlene Robertson",
-    company: "Ferrari",
-    avatar: "/images/avatars/darlene-robertson.png",
-    type: "small-dark",
-  },
-  {
-    quote:
-      "Collaborative coding feels effortless now. With Pointer’s real-time previews, pair programming has become faster and more productive.",
-    name: "Cody Fisher",
-    company: "Apple",
-    avatar: "/images/avatars/cody-fisher.png",
-    type: "small-dark",
-  },
-  {
-    quote:
-      "Deploying on Vercel with Pointer was not just simple, it felt seamless. We went from coding to seeing our changes live in minutes without worrying about build pipelines or configuration issues.",
-    name: "Albert Flores",
-    company: "Louis Vuitton",
-    avatar: "/images/avatars/albert-flores.png",
+      "I have been using Apalis for my project Ryot from the beginning. It has is extremely feature packed with background jobs, delayed jobs, crons and stepped functions. Building entire workflows with Apalis is very easy.",
+    name: "IgnisDa",
+    company: "Ryot",
+    avatar: "https://avatars.githubusercontent.com/u/60938164",
     type: "large-light",
   },
 ]
@@ -145,16 +113,12 @@ export function Testimonials() {
       <div className="w-full pt-0.5 pb-4 md:pb-6 lg:pb-10 flex flex-col md:flex-row justify-center items-start gap-4 md:gap-4 lg:gap-6 max-w-[1100px] mx-auto">
         <div className="flex-1 flex flex-col justify-start items-start gap-4 md:gap-4 lg:gap-6">
           <TestimonialCard {...testimonials[0]} />
+        </div>
+        <div className="flex-1 flex flex-col justify-start items-start gap-4 md:gap-4 lg:gap-6">
           <TestimonialCard {...testimonials[1]} />
         </div>
         <div className="flex-1 flex flex-col justify-start items-start gap-4 md:gap-4 lg:gap-6">
           <TestimonialCard {...testimonials[2]} />
-          <TestimonialCard {...testimonials[3]} />
-          <TestimonialCard {...testimonials[4]} />
-        </div>
-        <div className="flex-1 flex flex-col justify-start items-start gap-4 md:gap-4 lg:gap-6">
-          <TestimonialCard {...testimonials[5]} />
-          <TestimonialCard {...testimonials[6]} />
         </div>
       </div>
     </section>

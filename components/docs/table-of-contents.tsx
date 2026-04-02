@@ -54,7 +54,7 @@ export const TableOfContents: React.FC<{
                     href={`#${slug}`}
                     className={`flex items-center pb-1 break-words hover:text-black dark:hover:text-white leading-snug text-left ${
                       slug === activeHeading
-                        ? "text-black font-normal dark:text-white dark:font-light"
+                        ? "text-black font-extrabold dark:text-white dark:font-light"
                         : ""
                     }`}
                     dangerouslySetInnerHTML={{

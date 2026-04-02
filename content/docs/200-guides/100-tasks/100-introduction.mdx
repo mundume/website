@@ -1,5 +1,5 @@
 ---
-title: Introduction to Task Services
+title: Introduction
 navTitle: Introduction
 excerpt: Apalis provides flexible ways to define task handlers that process your background tasks.
 bottomNavigation: pagination
@@ -22,7 +22,7 @@ The simplest way to define a task handler in Apalis is using async functions. Th
 
 ### Basic Usage
 
-```rust {12} name="simple_fn" mode="inline"
+```rust {6} name="simple_fn" mode="inline"
 #[derive(Clone)]
 struct State {
     // .. client: Arc<MailClient>
@@ -48,7 +48,7 @@ Async function services offer several powerful capabilities:
 
 The async function approach supports rich parameter extraction patterns:
 
-```rust {7,9,11,13} name="complex_fn" mode="inline"
+```rust {3,5,7,9} name="complex_fn" mode="inline"
 async fn complex_handler(
     // Task arguments
     email: Email,
@@ -80,7 +80,7 @@ Consider using `tower::Service` when you need:
 
 ### Example
 
-```rust name="service_fn" mode="inline"
+```rust {14} name="service_fn" mode="inline"
 #[derive(Clone)]
 pub struct EmailService {
     state: State
@@ -118,7 +118,50 @@ where
 }
 ```
 
-## The complete example
+## Debugging
+
+Lets say you have a handler that is invalid
+```rs
+#[derive(Debug)]
+struct Msg {
+    id: u64,
+}
+
+async fn handle_task(item: Msg, wrk: WorkerContext) -> Result<(), BoxDynError> {
+    println!("Received {item:?}");
+    Ok(())
+}
+```
+
+The error produced by the compiler can be a little vague:
+
+```
+the trait bound `fn(..., ...) -> ... {handle_task}: IntoWorkerServiceExt<_, ..., _, ..., ...>` is not satisfied
+```
+
+This is usually caused by the relationship between `IntoWorkerService` and `IntoWorkerServiceExt` where the latter builds on top of the former meaning some type information may be lost.
+
+To debug this issue, it is recommended to use `IntoWorkerService` to direct you to the right problem.
+
+```rs
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let mut backend = PostgresStorage::new_with_notify(&pool, &Config::default());
+    IntoWorkerService::into_service(handle_task, backend);
+}
+```
+
+This will lead the compiler giving you a better error:
+
+```
+the trait bound `Msg: serde::Serialize` is not satisfied
+for local types consider adding `#[derive(serde::Serialize)]` to your `MyMsg` type
+for types from other crates check whether the crate offers a `serde` feature flag
+the following other types implement trait `Serialize`:
+..
+```
+
+## Complete example
 
 ```rust fileName="main.rs" mode="compile"
 use apalis::prelude::*;

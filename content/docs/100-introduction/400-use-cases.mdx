@@ -1,6 +1,6 @@
 ---
 title: Use cases
-excerpt: Use cases
+excerpt: Outlines the common use cases and application scenarios for apalis. It demonstrates how Apalis can be applied to solve various asynchronous processing needs in real-world applications.
 bottomNavigation: pagination
 ---
 
@@ -14,238 +14,125 @@ Apalis excels in scenarios where work needs to be performed asynchronously, outs
 
 One of the most common use cases for background task processing is sending emails. This prevents user-facing operations from being blocked while waiting for email delivery.
 
-```mermaid
-sequenceDiagram
-    participant "Web Application" as App
-    participant "RedisStorage" as Queue
-    participant "Email Worker" as Worker
-    participant "SMTP Server" as SMTP
+With Apalis, you can enqueue email jobs (e.g., welcome emails, password resets, notifications) and process them in the background using dedicated workers. This ensures:
 
-    App->>Queue: push(Email)
-    Note over Queue: Task stored in queue
-    Worker->>Queue: poll()
-    Queue-->>Worker: Email task
-    Worker->>SMTP: Send email
-    SMTP-->>Worker: Email sent
-    Worker->>Queue: Mark task complete
-```
+- Faster response times for user-facing APIs  
+- Improved reliability through retries and error handling  
+- Better scalability when handling large volumes of emails  
 
-Sources: [examples/redis/src/main.rs:11-22](), [examples/postgres/src/main.rs:12-25](), [examples/basics/src/main.rs:52-88]()
+Typical workflow:
 
-### Heavy Computational Tasks
+1. A user signs up or triggers an action  
+2. Your application enqueues an `EmailJob`  
+3. A worker picks up the job and sends the email  
+4. Failures are retried or logged for inspection  
 
-For CPU-intensive operations that would block the main application thread:
+---
 
-```mermaid
-sequenceDiagram
-    participant "User Request" as User
-    participant "Application" as App
-    participant "PostgresStorage" as Queue
-    participant "Worker" as Worker
+### Scheduled and Delayed Jobs
 
-    User->>App: Request resource
-    App->>User: Immediate response
-    App->>Queue: push(ComputeTask)
-    Worker->>Queue: poll()
-    Queue-->>Worker: ComputeTask
-    Note over Worker: CPU-intensive processing
-    Worker->>App: Update results in database
-    Note over App: User gets results on next request
-```
+Many applications require tasks to run at a later time or on a schedule. Apalis supports delayed execution and scheduling, making it ideal for:
 
-Sources: [README.md:33-46](), [src/lib.rs:18-50]()
+- Sending reminder emails (e.g., “Your subscription expires tomorrow”)  
+- Running periodic cleanup jobs  
+- Generating daily or weekly reports  
+- Retrying failed operations after a delay  
 
-### Scheduled and Recurring Tasks
+You can enqueue jobs with a delay or integrate with schedulers to trigger recurring tasks.
 
-With Apalis' cron integration, you can schedule tasks to run at specific times:
+---
 
-```mermaid
-flowchart LR
-    A["CronScheduler"] -->|"Scheduled trigger"| B["RedisStorage or SQLStorage"]
-    B -->|"push(PeriodicTask)"| C["Worker"]
-    C -->|"execute()"| D["Task function"]
-    D -->|"Completion"| E["Results processing"]
-```
+### Data Processing Pipelines
 
-Sources: [README.md:118-153](), [README.md:53]()
+Apalis can be used to build robust data pipelines that process large volumes of data in the background. This is especially useful for:
 
-## Real-World Implementation Patterns
+- ETL (Extract, Transform, Load) workflows  
+- Log processing and aggregation  
+- Image/video processing  
+- File parsing and indexing  
 
-### Pattern 1: Web Application with Background Processing
+Workers can process jobs concurrently, enabling efficient handling of high-throughput workloads.
 
-This pattern demonstrates integrating Apalis with a web application for handling asynchronous tasks:
+---
 
-```mermaid
-flowchart TB
-    subgraph "Web Server"
-        A["Web Routes"]
-        B["API Controllers"]
-    end
+### Webhook Handling and Event Processing
 
-    subgraph "Apalis System"
-        C["RedisStorage/PostgresStorage"]
-        D["Worker Pool"]
-        E["Monitor"]
-    end
+External systems often send webhooks that need to be processed reliably. Instead of handling them synchronously, Apalis allows you to:
 
-    subgraph "External Services"
-        F["Email Service"]
-        G["Payment Provider"]
-        H["Data Processing"]
-    end
+- Quickly acknowledge incoming webhook requests  
+- Enqueue jobs for processing the payload  
+- Handle retries and failures gracefully  
 
-    A -->|"User Request"| B
-    B -->|"push(Task)"| C
-    C -->|"poll()"| D
-    D -->|"process tasks"| F
-    D -->|"process tasks"| G
-    D -->|"process tasks"| H
-    E -->|"manages"| D
-```
+This is useful for integrations with payment providers, CRMs, and third-party APIs.
 
-This pattern is commonly used for:
+---
 
-- User registration flows with welcome emails
-- Order processing in e-commerce
-- Report generation
-- Data exports
+### Background Computation and Heavy Tasks
 
-Sources: [examples/redis/src/main.rs:24-75](), [examples/postgres/src/main.rs:27-65]()
+Some operations are computationally expensive and should not block the main application thread. Apalis is well-suited for:
 
-### Pattern 2: Stepped Task Processing
+- Generating PDFs or reports  
+- Running machine learning inference jobs  
+- Performing cryptographic operations  
+- Complex business logic processing  
 
-Apalis supports complex workflows through stepped task processing:
+By offloading these tasks to workers, your application remains responsive and scalable.
 
-```
-stateDiagram
-    [*] --> "TaskCreated"
-    "TaskCreated" --> "Step1Processing"
-    "Step1Processing" --> "Step2Processing": success
-    "Step1Processing" --> "Failed": error
-    "Step2Processing" --> "Step3Processing": success
-    "Step2Processing" --> "Failed": error
-    "Step3Processing" --> "Completed": success
-    "Step3Processing" --> "Failed": error
-    "Failed" --> [*]
-    "Completed" --> [*]
-```
+---
 
-In the code, this is implemented using the `StepBuilder` pattern, which allows creating a sequence of processing steps that execute in order:
+### Task Orchestration and Workflows
 
-```mermaid
-classDiagram
-    class StepBuilder {
-        step_fn(func)
-    }
+Apalis can coordinate multi-step workflows where tasks depend on each other. This is useful for:
 
-    class Worker {
-        build_stepped(steps)
-    }
+- Order processing systems (payment → inventory → shipping)  
+- Multi-stage data transformations  
+- Distributed job coordination  
 
-    class Workflow {
-        welcome()
-        campaign()
-        complete_campaign()
-    }
+You can model workflows as a series of jobs, where each step enqueues the next, enabling flexible and composable pipelines.
 
-    StepBuilder --> Worker: provides steps to
-    Workflow --> StepBuilder: registered with
-```
+---
 
-This pattern is ideal for:
+### Retry and Failure Handling
 
-- User onboarding sequences
-- Order fulfillment with multiple stages
-- Content moderation pipelines
-- Multi-stage data processing
+Failures are inevitable in distributed systems. Apalis provides mechanisms to handle them effectively:
 
-Sources: [README.md:118-153]()
+- Automatic retries with backoff strategies  
+- Dead-letter queues for failed jobs  
+- Error tracking and logging  
+- Idempotent job design support  
 
-## Integration Use Cases
+This ensures that your system remains robust even in the face of transient failures.
 
-### Web Framework Integration
+---
 
-Apalis integrates with popular Rust web frameworks for seamless background task processing:
+### Rate-Limited and External API Calls
 
-```mermaid
-flowchart TB
-    subgraph "Actix-Web Application"
-        A["HTTP Routes"]
-        B["Handlers"]
-    end
+When interacting with third-party APIs, you often need to respect rate limits. Apalis helps by:
 
-    subgraph "Apalis Components"
-        C["Storage"]
-        D["Worker"]
-        E["Monitor"]
-    end
+- Controlling concurrency of workers  
+- Queueing requests to smooth out spikes  
+- Retrying failed API calls safely  
 
-    A -->|"Request Processing"| B
-    B -->|"push(Task)"| C
-    C <-->|"poll()/update()"| D
-    E -->|"manages"| D
+This is particularly useful for integrations with services that enforce strict quotas.
 
-    subgraph "Application Startup"
-        F["main()"]
-    end
+---
 
-    F -->|"registers"| E
-    F -->|"initializes"| A
-```
+## When to Use Apalis
 
-Sources: [README.md:197-202]()
+Apalis is a good fit when:
 
-### Error Handling and Resilience
+- You need reliable background job processing  
+- Tasks can be performed asynchronously  
+- You want to scale workers independently of your main application  
+- You need retries, scheduling, or workflow orchestration  
 
-Apalis provides robust error handling for production applications:
+It may not be necessary if:
 
-```mermaid
-flowchart LR
-    A["Task Execution"] -->|"Error occurs"| B{"Error Type?"}
-    B -->|"Transient"| C["RetryPolicy"]
-    B -->|"Permanent"| D["Error Handler"]
-    B -->|"Panic"| E["CatchPanicLayer"]
-    C -->|"reschedule(task)"| F["Storage"]
-    D -->|"mark failed"| F
-    E -->|"catch and log"| G["Error Reporting"]
-```
+- All operations must be strictly synchronous  
+- The workload is trivial and does not benefit from background processing  
 
-This pattern allows for:
+---
 
-- Graceful handling of service outages
-- Automatic retries for transient failures
-- Panic recovery to prevent worker crashes
+## Summary
 
-Sources: [examples/catch-panic/src/main.rs:25-53](), [examples/basics/src/main.rs:101-129]()
-
-## Real-World Projects Using Apalis
-
-Several production applications use Apalis for background processing:
-
-| Project         | Description                         | Use Case                   |
-| --------------- | ----------------------------------- | -------------------------- |
-| Ryot            | Media & fitness tracking platform   | Background data processing |
-| Summarizer      | Podcast summarization               | Audio processing tasks      |
-| Universal Inbox | Notification centralization         | Message processing         |
-| Hatsu           | ActivityPub bridge for static sites | Content federation         |
-
-Sources: [README.md:204-209]()
-
-## Storage Backends for Different Use Cases
-
-Apalis supports multiple storage backends to fit different operational needs:
-
-```mermaid
-flowchart TB
-    A["Application Requirements"] --> B{"Choose Backend"}
-
-    B -->|"High performance, low persistence"| C["RedisStorage"]
-    B -->|"Transactional, relational data"| D["PostgresStorage"]
-    B -->|"Embedded deployment"| E["SqliteStorage"]
-    B -->|"Enterprise deployment"| F["MySqlStorage"]
-
-    C --> G["Redis Database"]
-    D --> H["PostgreSQL Database"]
-    E --> I["SQLite File/Memory"]
-    F --> J["MySQL Database"]
-```
+Apalis provides a flexible and powerful foundation for handling asynchronous work in Rust applications. Whether you're sending emails, processing data, or orchestrating complex workflows, it helps you build systems that are scalable, reliable, and responsive.
