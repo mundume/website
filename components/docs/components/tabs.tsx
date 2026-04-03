@@ -78,10 +78,14 @@ function _Tabs({
     onChange?.(index)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps -- only on mount
 
-  const itemsWithFallback = items ??
-    (Array.isArray(children)
-      ? Array.from({ length: children.length }, (_, i) => `Tab ${i}`)
-      : [])
+  const itemsWithFallback = React.useMemo(() => {
+    return (
+      items ??
+      (Array.isArray(children)
+        ? Array.from({ length: children.length }, (_, i) => `Tab ${i}`)
+        : [])
+    )
+  }, [children, items])
 
   return (
     <HeadlessTab.Group
@@ -104,7 +108,7 @@ function _Tabs({
                       ? "border-black dark:border-white text-black font-normal dark:font-light dark:text-white"
                       : "border-transparent hover:text-black dark:hover:text-white",
                     disabled &&
-                    "pointer-events-none text-gray-400 dark:text-neutral-600"
+                      "pointer-events-none text-gray-400 dark:text-neutral-600"
                   )
                 }
               >
