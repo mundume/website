@@ -8,6 +8,7 @@ import { TableOfContents } from "@/components/docs/table-of-contents"
 import { Divider } from "@/components/layout/divider"
 import { getBreadcrumbs } from "@/contentlayer/utils/get-breadcrumbs"
 import { allDocsPages } from "contentlayer/generated"
+import { formatDistance } from "date-fns"
 import { notFound } from "next/navigation"
 
 export const generateStaticParams = () =>
@@ -51,14 +52,14 @@ export default async function Page(props: {
             {page.title}
           </h2>
         </div>
-        {/*
+        
         page.lastEdited && (
           <div className="text-sm h-4 mt-1.5 mb-6">
             Last edited{" "}
             {formatDistance(new Date(), new Date(page.lastEdited))} ago.
           </div>
         )
-        */}
+       
         <MobileTableOfContents
           elements={page.headings}
           pageFilePath={page._raw.sourceFilePath}

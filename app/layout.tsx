@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   title: "Apalis - background task and message processing library for Rust",
   description:
     "Simple, extensible multithreaded background task and message processing library for Rust",
+  openGraph: {
+    images: "/images/og.png",
+  }
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
