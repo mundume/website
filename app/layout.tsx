@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 const calSans = localFont({
-  src: "../assets/cal-sans-semibold.woff2",
+  src: "../public/fonts/cal-sans-semibold.woff2",
   weight: "600",
   display: "swap",
   variable: "--font-cal-sans",

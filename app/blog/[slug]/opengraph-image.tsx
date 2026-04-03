@@ -28,11 +28,11 @@ export default async function Image({
       if (!res.ok) return notFound()
       return res.json()
     }),
-    fetch(new URL("../../../assets/inter-light.ttf", import.meta.url)).then(
+    fetch(new URL(`${base}/fonts/inter-light.ttf`, import.meta.url)).then(
       (res) => res.arrayBuffer()
     ),
     fetch(
-      new URL("../../../assets/cal-sans-semibold.ttf", import.meta.url)
+      new URL(`${base}/fonts/cal-sans-semibold.ttf`, import.meta.url)
     ).then((res) => res.arrayBuffer())
   ] as const)
 

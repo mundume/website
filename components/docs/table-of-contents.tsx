@@ -74,7 +74,7 @@ export const TableOfContents: React.FC<{
           <div className="text-sm py-9 space-y-3">
             {pageFilePath && (
               <Link
-                href={`https://github.com/apalis-dev/website/blob/content/${pageFilePath}`}
+                href={`https://github.com/apalis-dev/website/blob/main/content/${pageFilePath}`}
                 className="flex items-start gap-1 hover:text-black dark:hover:text-white"
               >
                 <span>Edit on GitHub</span>
