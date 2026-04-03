@@ -80,7 +80,10 @@ function _Tabs({
 
   const itemsWithFallback = React.useMemo(() => {
     return (
-      
+      items ??
+      (Array.isArray(children)
+        ? Array.from({ length: children.length }, (_, i) => `Tab ${i}`)
+        : [])
     )
   }, [children, items])
 
