@@ -10,6 +10,9 @@ import { getBreadcrumbs } from "@/contentlayer/utils/get-breadcrumbs"
 import { allDocsPages } from "contentlayer/generated"
 import { notFound } from "next/navigation"
 
+export const dynamic = 'force-static';
+export const dynamicParams = false; // Disables on-demand generation for missing slugs
+
 export const generateStaticParams = () =>
   allDocsPages.map((page) => ({
     slug: page.urlPath.replace("/docs/", "").split("/")
