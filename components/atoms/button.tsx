@@ -16,8 +16,8 @@ export const Button: FC<{
       href={href}
       className={`inline-flex relative z-10 h-10 rounded-sm p-px shadow-lg button-hover ${
         secondary
-          ? "bg-gradient-to-br from-zinc-300 to-zinc-500"
-          : "bg-gradient-to-b from-white to-zinc-300"
+          ? "bg-gradient-to-br from-zinc-300 to-zinc-500 mx-auto"
+          : "bg-gradient-to-b from-white to-zinc-300 mx-auto"
       } ${className}`}
       {...(external && {
         rel: "noopener noreferrer",
