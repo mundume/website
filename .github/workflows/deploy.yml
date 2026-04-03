@@ -24,12 +24,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'yarn'
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable --immutable-cache --check-cache
       - name: Build Next.js
-        # Ensure you use @opennextjs/cloudflare or @cloudflare/next-on-pages
-        run: npx @cloudflare/next-on-pages 
+        run: yarn build
+
+      - name: Build for Cloudflare
+        run: yarn deploy
 
       # 3. Deploy Prebuilt Artifacts to Cloudflare Pages
       - name: Deploy to Cloudflare Pages
@@ -37,4 +39,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name=apalis-website
+          command: pages deploy .open-next --project-name=apalis-website
