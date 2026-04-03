@@ -37,27 +37,28 @@ export function PricingSection() {
                 "Observability for Cronjobs",
                 "Custom feature requests",
                 "Custom telemetry backends",
-                "Priority email and chat support",
+                "1 Application",
+                "Priority support",
             ],
-            buttonText: "Join now",
+            buttonText: "Contact Sales",
             buttonClass:
                 "bg-primary-foreground shadow-[0px_1px_1px_-0.5px_rgba(16,24,40,0.20)] text-black text-shadow-[0px_1px_1px_rgba(16,24,40,0.08)] hover:bg-primary-foreground/90",
             popular: true,
         },
         {
-            name: "Ultra",
-            monthlyPrice: "$499",
-            annualPrice: "$4999",
+            name: "Enterprise",
+            monthlyPrice: "Custom",
+            annualPrice: "Custom",
             description: "Tailored solutions for teams.",
             features: [
                 "Encryption support",
+                "Unlimited Applications",
                 "Advanced workflow coordination",
                 "Dedicated account support",
                 "Collaborative coding with our team",
                 "Priority Custom feature requests",
                 "Logs and metrics retention",
                 "Enterprise-grade security and compliance",
-                "Priority deployments and SLA guarantees",
                 "All Pro features"
             ],
             buttonText: "Talk to Sales",
@@ -74,7 +75,7 @@ export function PricingSection() {
                         Pricing built for every developer
                     </h2>
                     <p className="self-stretch text-center text-muted-foreground text-sm font-medium leading-tight">
-                        Choose a plan that fits your coding workflow, from individuals starting out to <br /> growing professionals
+                        Choose a plan that fits your background processing requirements, from individuals starting out to <br /> growing professionals
                         and large organizations.
                     </p>
                 </div>
@@ -156,7 +157,7 @@ export function PricingSection() {
                                         <div
                                             className={`text-center text-sm font-medium leading-tight ${plan.popular ? "text-primary-foreground/70" : "text-zinc-400"}`}
                                         >
-                                            /{isAnnual?"year":"month"}
+                                            {plan.name != "Enterprise" ? <span>/{isAnnual ? "year" : "month"}</span> : <></>}
                                         </div>
                                     </div>
                                     <div
@@ -166,18 +167,7 @@ export function PricingSection() {
                                     </div>
                                 </div>
                             </div>
-                            <Button
-                                href="/pricing"
-                                className={`self-stretch px-5 py-2 flex justify-center items-center ${plan.buttonClass}`}
-                            >
-                                <div className="px-1.5 flex justify-center items-center gap-2">
-                                    <span
-                                        className={`text-center text-sm font-medium leading-tight ${plan.name === "Free" ? "text-gray-800" : plan.name === "Pro" ? "text-black" : "text-zinc-950"}`}
-                                    >
-                                        {plan.buttonText}
-                                    </span>
-                                </div>
-                            </Button>
+
                         </div>
                         <div className="self-stretch flex flex-col justify-start items-start gap-4">
                             <div

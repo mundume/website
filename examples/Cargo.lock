@@ -27,10 +27,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "apalis"
-version = "1.0.0-rc.4"
+name = "anyhow"
+version = "1.0.102"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "715f15d294758af4ef93447224a9b23f9f16ccd230061d30783c3b29870d9c11"
+checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
+
+[[package]]
+name = "apalis"
+version = "1.0.0-rc.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d46b0b1f4ded5b28d3af14243ec0b13a40b673d2e6d7bd94e0de4c8a4a7bbd8b"
 dependencies = [
  "apalis-core",
  "futures-util",
@@ -42,9 +48,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-codec"
-version = "0.1.0-rc.4"
+version = "0.1.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7044b64a1cf157936c016768aeb5be6b5fd3b551ce113c39f8a3bbf2611f661b"
+checksum = "45efb57fc006fadf87bb07b3d7d19903f85e18f06d8e48d8c648cb8cbb461e6f"
 dependencies = [
  "apalis-core",
  "serde",
@@ -53,9 +59,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-core"
-version = "1.0.0-rc.4"
+version = "1.0.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0f76544e368008495c859a2dcab9ae98456b492154e17dbb06c05e2a3ec47b9"
+checksum = "acfebc2bba9ddc815fa574ce4f506762c01122096fa57d0c5b585c57d069284a"
 dependencies = [
  "futures-channel",
  "futures-core",
@@ -72,9 +78,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-file-storage"
-version = "0.1.0-rc.4"
+version = "0.1.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1333dabf6ccefbf5543b99b4b5d4cded9e36d21975a1abac0f59661dee2e5ae"
+checksum = "57ea4f89e39763073a9ae5b103c063d0ecb7e95480532101d74344c835b2c364"
 dependencies = [
  "apalis-codec",
  "apalis-core",
@@ -88,9 +94,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-postgres"
-version = "1.0.0-rc.4"
+version = "1.0.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3d02d73f376c33599fcb4a92eab84f057330577e2e0c0f0cf3d4fef705c234e"
+checksum = "8e7fccc55fd309574036c472fd42ef1d5e802d246e0b2c70e749951722783f0a"
 dependencies = [
  "apalis-codec",
  "apalis-core",
@@ -107,9 +113,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-sql"
-version = "1.0.0-rc.4"
+version = "1.0.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9466baa9eb65d1daa7eb2f98e2718aa6044a0ea95429457e1298d436722cbe48"
+checksum = "d0821183c53a44b41133eae82b558112a67a1c4df1917d2bc2e3f803c8b6658c"
 dependencies = [
  "apalis-core",
  "chrono",
@@ -372,13 +378,17 @@ dependencies = [
 name = "examples"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "apalis",
  "apalis-file-storage",
  "apalis-postgres",
+ "bytes",
  "futures",
  "serde",
+ "serde_json",
  "thiserror",
  "tokio",
+ "tokio-util",
  "tracing",
  "tracing-subscriber",
 ]

@@ -12,14 +12,18 @@ const menus = [
     items: [
       { name: "Getting Started", href: "/docs/introduction/quickstart" },
       { name: "Guides", href: "/docs/guides" },
-      { name: "Rust Docs", href: "https://docs.rs/apalis" }
+      { name: "apalis", href: "https://docs.rs/apalis" },
+      { name: "apalis-core", href: "https://docs.rs/apalis-core", blank: true },
+      { name: "apalis-workflow", href: "https://docs.rs/apalis-workflow", blank: true }
     ]
   },
   {
-    name: "Core",
+    name: "Products",
     items: [
-      { name: "apalis-core", href: "https://docs.rs/apalis-core", blank: true },
-      { name: "apalis-workflow", href: "https://docs.rs/apalis-workflow", blank: true }
+      { name: "Web UI", href: "https://github.com/apalis-dev/apalis-board", blank: true },
+      { name: "Chirpy", href: "https://github.com/apalis-dev/chirpy", blank: true },
+      { name: "Kato", href: "https://github.com/apalis-dev/kato", blank: true },
+      { name: "Hooky", href: "https://github.com/apalis-dev/hooky", blank: true },
     ]
   },
   {
@@ -40,13 +44,33 @@ const menus = [
         href: "https://docs.rs/apalis-sqlite",
         blank: true
       },
+      {
+        name: "apalis-mysql",
+        href: "https://docs.rs/apalis-mysql",
+        blank: true
+      },
+      {
+        name: "apalis-amqp",
+        href: "https://docs.rs/apalis-amqp",
+        blank: true
+      },
+      {
+        name: "apalis-nats",
+        href: "https://docs.rs/apalis-nats",
+        blank: true
+      },
+      {
+        name: "apalis-pgmq",
+        href: "https://docs.rs/apalis-pgmq",
+        blank: true
+      },
     ]
   }
 ]
 
 const socials = [
   { name: "GitHub", icon: "github", href: "https://github.com/apalis-dev" },
-  { name: "Discord", icon: "discord", href: "https://discord.gg/apalis" },
+  { name: "Discord", icon: "discord", href: "https://discord.gg/W29BYSXXmp" },
   { name: "Twitter", icon: "twitter", href: "https://twitter.com/apalis_dev" }
 ]
 

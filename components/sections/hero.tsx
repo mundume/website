@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion"
 // import { Pill } from "../atoms/pill"
 import { useEffect, useState } from "react"
 import { Button } from "../atoms/button"
+import Image from "next/image"
 // import { Video } from "../atoms/video"
 
 export const headlines = [
@@ -56,12 +57,18 @@ export const Hero = () => {
             </span>
           </h1>
           <div className="flex flex-col sm:flex-row items-start gap-3">
-            <Button href="/docs/quickstart">Get Started</Button>
-            <Button href="/examples" secondary>
+            <Button href="/docs/introduction/quickstart">Get Started</Button>
+            <Button href="https://github.com/apalis-dev/examples" secondary>
               View Examples
             </Button>
           </div>
-          <img className="rounded-t-3xl border-b-0 border hover:cursor-pointer mb-8" src="https://raw.githubusercontent.com/apalis-dev/apalis-board/master/screenshots/task.png" />
+          <Image
+            alt="Web UI dashboard"
+            className="rounded-t-3xl border-b-0 border hover:cursor-pointer mb-8"
+            src="/images/board.png"
+            width={3236}
+            height={1714}
+          />
         </section>
       </div>
     </section>

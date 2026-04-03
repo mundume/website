@@ -22,7 +22,7 @@ The `FromRequest` trait allows you to define how various types should be extract
 
 ### Basic Usage Example
 
-```rust name="simple" mode="inline"
+```rust {3} name="simple" mode="inline"
 async fn simple(
     email: Email,
     worker: WorkerContext,
@@ -41,7 +41,7 @@ The real power of dependency injection comes from implementing `FromRequest` for
 
 Consider a task that needs user information. Instead of fetching the user inside the handler, you can create a custom extractor:
 
-```rust name="custom_extractor" mode="inline"
+```rust {31} name="custom_extractor" mode="inline"
 struct User {
     id: String,
     email: String,
@@ -109,7 +109,7 @@ async fn send_email(email: Email, user: User) -> Result<(), BoxDynError> {
 
 You can inject multiple custom dependencies into a single handler:
 
-```rust name="multiple_extractor" mode="inline"
+```rust {18,19,20} name="multiple_extractor" mode="inline"
 struct Organization<S> {
     id: String,
     name: String,

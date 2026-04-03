@@ -10,7 +10,7 @@ In apalis, task handlers are responsible for processing individual tasks, and ea
 
 Here’s an example of implementing error handling in a task handler:
 
-```rust
+```rust {12,25}
 use apalis::prelude::*;
 use anyhow::{Context, Error};
 use serde::{Deserialize, Serialize};
@@ -48,31 +48,58 @@ In this example, `handle_send_email` catches potential errors from the `send_ema
 apalis provides the `RetryLayer` to automatically retry failed tasks based on predefined strategies. This is useful when dealing with temporary failures, such as network issues.
 
 **Applying `RetryLayer` to a Worker**
-```rust
+```rust {7,9}
 use apalis::prelude::*;
 use apalis::layers::RetryLayer;
 use std::time::Duration;
 
 #[tokio::main]
 async fn main() {
+    let backoff = ExponentialBackoffMaker::default().make_backoff();
     let worker = WorkerBuilder::new("email_worker")
-        .layer(RetryLayer::exponential(Duration::from_secs(2)).with_max_retries(5))
+        .layer(RetryLayer::new(RetryPolicy::retries(3).with_backoff(backoff)))
         .build(handle_send_email);
-
-    Monitor::new()
-        .register(worker)
-        .run()
-        .await
-        .expect("Monitor failed");
 }
 ```
 
 **Explanation:**
-1. **`RetryLayer::exponential(Duration::from_secs(2))`** – This applies an exponential backoff strategy, doubling the wait time between retries.
-2. **`.with_max_retries(5)`** – The task will be retried up to 5 times before being marked as permanently failed.
+1. **`RetryLayer::new(RetryPolicy::retries(3))`** – This applies an exponential backoff strategy, doubling the wait time between retries.
+2. **`.with_backoff(backoff)`** – The task will be retried with a custom backoff.
 3. Integration with `handle_send_email`– If an error occurs, the task is automatically retried according to the `RetryLayer` configuration.
 
 By using `RetryLayer`, you can ensure that transient failures do not result in immediate task failures, improving the resilience of your apalis-based task processing system.
+
+### Conditional Retry
+
+Use `RetryIfPolicy` to retry only if a predicate matches the error.
+
+```rust {13}
+use std::io::{self, ErrorKind};
+use apalis::layers::retry::RetryPolicy;
+
+fn is_transient(e: &io::Error) -> bool {
+    matches!(e.kind(),
+        ErrorKind::ConnectionRefused |
+        ErrorKind::ConnectionReset |
+        ErrorKind::TimedOut |
+        ErrorKind::Interrupted
+    )
+}
+
+let policy = RetryPolicy::retries(3).retry_if(is_transient);
+```
+
+### Metadata Based
+
+You can set a custom retry config per task before pushing it. This allows fine grained task retry setting.
+
+```rust
+use apalis::layers::retry::{RetryPolicy, RetryConfig};
+let policy = RetryPolicy::default().from_task_config();
+
+let task = Task::new(args).retries(4).build(); // 4 retries only for this task
+
+```
 
 
 ## Catching Panics
@@ -84,7 +111,7 @@ In apalis, task execution is designed to be robust and resilient. However, somet
 Applying `CatchPanicLayer` to a worker ensures that all task executions within that worker are protected against panics. Here's how to integrate it:
 
 **Example Usage**
-```rust
+```rust {11,17}
 use apalis::prelude::*;
 use apalis::layers::CatchPanicLayer;
 use anyhow::Error;
@@ -103,12 +130,6 @@ async fn main() {
     let worker = WorkerBuilder::new("example_worker")
         .layer(CatchPanicLayer::new()) 
         .build(handle_example_task);
-
-    Monitor::new()
-        .register(worker)
-        .run()
-        .await
-        .expect("Monitor failed");
 }
 
 ```
@@ -128,13 +149,12 @@ When `CatchPanicLayer` is enabled:
 ### Combining with Retry Strategies
 `CatchPanicLayer` works well with `RetryLayer` to ensure panicked tasks are retried automatically.
 
-```rust
-use apalis::layers::{CatchPanicLayer, RetryLayer};
+```rust {4,5}
 use std::time::Duration;
 
 let worker = WorkerBuilder::new("example_worker")
-    .layer(CatchPanicLayer)
-    .layer(RetryLayer::exponential(Duration::from_secs(2)).with_max_retries(3))
+    .catch_panic()
+    .layer(RetryLayer::new(RetryPolicy::retries(3)))
     .build(handle_example_task);
 ```
 

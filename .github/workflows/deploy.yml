@@ -1,0 +1,40 @@
+name: Build and Deploy to Cloudflare
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 1. Install Rust and Build Artifacts
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Build Rust Artifacts
+        working-directory: examples
+        run: |
+          cargo build --release
+
+      # 2. Build Next.js for Cloudflare
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Next.js
+        # Ensure you use @opennextjs/cloudflare or @cloudflare/next-on-pages
+        run: npx @cloudflare/next-on-pages 
+
+      # 3. Deploy Prebuilt Artifacts to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .vercel/output/static --project-name=your-project-name
