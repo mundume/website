@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { ReactNode } from "react";
 import { Providers } from "./providers";
+import { headers } from "next/headers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,12 +22,20 @@ const calSans = localFont({
   variable: "--font-cal-sans",
 });
 
+const baseUrl = async () => {
+  let h = await headers();
+  const host = h.get("host") ?? "localhost:3000"
+  const proto = host.includes("localhost") ? "http" : "https"
+  return `${proto}://${host}`
+}
+
+
 export const metadata: Metadata = {
   title: "Apalis - background task and message processing library for Rust",
   description:
     "Simple, extensible multithreaded background task and message processing library for Rust",
   openGraph: {
-    images: "/images/og.png",
+    images: `${baseUrl()}/images/og.png`,
   }
 };
 
