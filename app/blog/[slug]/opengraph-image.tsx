@@ -2,7 +2,6 @@ import { ImageResponse } from "next/og"
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 
-export const runtime = "edge"
 export const alt = "Apalis"
 export const size = {
   width: 1200,
