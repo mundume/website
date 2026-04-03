@@ -25,7 +25,7 @@ Run dev server:
 ## Development
 
 This project includes a way to build code examples to ensure that they can compile eg:
-
+```
 \```rust name="push" mode="inline"
 let task = Email {
     recipient: "main@example.com".to_string(),
@@ -33,8 +33,9 @@ let task = Email {
 };
 storage.push(task).await?;
 \```
+```
 
-
+```
 \```rust fileName="main.rs" mode="compile"
 use apalis::prelude::*;
 
@@ -45,7 +46,7 @@ async fn main() -> Result<(), BoxDynError> {
     // [!code inline:push]
 }
 \```
-
+```
 This would generate:
 
 
