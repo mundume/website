@@ -6,6 +6,7 @@ import { Icon } from "../icons"
 import { Search } from "../atoms/search"
 import { usePathname } from "next/navigation"
 import React from "react"
+import { MobileMenu } from "./mobile-menu"
 
 export interface NavigationLink {
   readonly name: string
@@ -49,6 +50,7 @@ export const Navigation: React.FC<{
           <Link href="/" className="z-50">
             <Logo className="hidden dark:block h-7 sm:h-8" />
           </Link>
+          <MobileMenu menu={links} socials={socials} />
           <div className="hidden md:flex items-center gap-3">
             <NavigationMenu />
             {searchBox && <Search className="w-56" />}
