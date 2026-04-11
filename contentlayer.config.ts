@@ -75,7 +75,12 @@ export default makeSource({
 
       [
         rehypePrettyCode,
-        { ...DEFAULT_REHYPE_PRETTY_CODE_OPTIONS, theme: "github-dark" },
+        {
+          ...DEFAULT_REHYPE_PRETTY_CODE_OPTIONS, theme: {
+            light: "github-light",
+            dark: "github-dark"
+          },
+        },
       ] as any,
 
       [rehypeSlug],

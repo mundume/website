@@ -114,8 +114,8 @@ body.no-scroll {
 .toc code {
   @apply inline-block bg-zinc-100 dark:bg-white/10 border border-zinc-200 dark:border-white/10 px-1 rounded-sm font-normal leading-snug;
 }
-.prose code {
-  @apply text-zinc-800 dark:text-zinc-300;
+.prose pre.shiki code {
+  @apply text-zinc-300 dark:text-zinc-300;
 }
 .prose h1 code,
 .prose h2 code,
@@ -142,6 +142,10 @@ body.no-scroll {
   @apply px-4 text-[#C9D1DA];
 }
 .shiki code {
+  @apply py-4 px-0 min-w-full bg-gray-900 !important;
+}
+
+.dark .shiki code {
   @apply py-4 px-0 min-w-full bg-transparent !important;
 }
 
@@ -246,22 +250,11 @@ body.no-scroll {
   display: block;
 }
 
-.shiki.github-dark {
-  display: none;
-}
-
 pre.shiki div.highlight {
   opacity: 1;
   background-color: #cacad4;
 }
 
-.dark .shiki.github-light {
-  display: none;
-}
-
-.dark .shiki.github-dark {
-  display: block;
-}
 
 .dark pre.shiki div.highlight {
   opacity: 1;
@@ -319,11 +312,18 @@ pre.shiki span.line {
 
 pre.shiki .line::before {
   content: counter(line-number);
-  color: hsl(240 5.3% 26.1%);
   display: inline-block;
   margin-right: 0.5em;
   margin-left: 0.5em;
   width: 2em;
+}
+
+.dark pre.shiki .line::before  {
+  color: hsl(240 5.3% 26.1%);
+}
+
+pre.shiki .line::before  {
+  color: hsl(240, 4%, 64%);
 }
 
 pre.shiki code {
@@ -331,10 +331,7 @@ pre.shiki code {
   background: none;
 }
 
-/** Don't show the language identifiers */
-pre.shiki .language-id {
-  display: none;
-}
+
 
 
 .video-container {
