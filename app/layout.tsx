@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`relative ${inter.variable} ${calSans.variable}`}
+      className={`relative ${inter.variable} ${calSans.variable} dark`}
       suppressHydrationWarning
     >
       <meta name="algolia-site-verification"  content="2C97CAF9558A3A92" />

@@ -103,7 +103,7 @@ function NavigationLink({ name, href, reload }: NavigationLink) {
   return (
     <Component
       href={href}
-      className={`h-8 cursor-pointer flex border bg-black border-[#333333] hover:border-white/50 transition duration-300 ease-in-out rounded items-center px-3 text-[13px] justify-center ${
+      className={`h-8 cursor-pointer flex border dark:bg-black border-[#333333] hover:border-white/50 transition duration-300 ease-in-out rounded items-center px-3 text-[13px] justify-center ${
         pathname?.startsWith(href)
           ? "text-black font-normal dark:text-white dark:font-light"
           : ""

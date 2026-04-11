@@ -26,6 +26,7 @@
     --input: 210 15% 80%;
     --ring: 190 100% 50%;
     --radius: 0.4rem;
+    color-scheme: dark;
   }
 
   .dark {

@@ -71,16 +71,16 @@ export function PricingSection() {
         <section className="w-full px-5 overflow-hidden flex flex-col justify-start items-center my-0 py-8 md:py-14">
             <div className="self-stretch relative flex flex-col justify-center items-center gap-2 py-0">
                 <div className="flex flex-col justify-start items-center gap-4">
-                    <h2 className="text-center text-foreground text-4xl md:text-5xl font-semibold leading-tight md:leading-[40px]">
+                    <h2 className="text-center dark:text-foreground text-4xl md:text-5xl font-semibold leading-tight md:leading-[40px]">
                         Pricing built for every developer
                     </h2>
-                    <p className="self-stretch text-center text-muted-foreground text-sm font-medium leading-tight">
+                    <p className="self-stretch text-center dark:text-muted-foreground text-sm font-medium leading-tight">
                         Choose a plan that fits your background processing requirements, from individuals starting out to <br /> growing professionals
                         and large organizations.
                     </p>
                 </div>
                 <div className="pt-4">
-                    <div className="p-0.5 bg-muted rounded-md outline outline-1 outline-[#0307120a] outline-offset-[-1px] flex justify-start items-center gap-1 md:mt-0">
+                    <div className="p-0.5 dark:bg-muted rounded-md outline outline-1 outline-[#0307120a] outline-offset-[-1px] flex justify-start items-center gap-1 md:mt-0">
                         <button
                             onClick={() => setIsAnnual(true)}
                             className={`pl-2 pr-1 py-1 flex justify-start items-start gap-2 rounded-md ${isAnnual ? "bg-accent shadow-[0px_1px_1px_-0.5px_rgba(0,0,0,0.08)]" : ""}`}
@@ -114,7 +114,7 @@ export function PricingSection() {
                         <div className="self-stretch flex flex-col justify-start items-start gap-6">
                             <div className="self-stretch flex flex-col justify-start items-start gap-8">
                                 <div
-                                    className={`w-full h-5 text-sm font-medium leading-tight ${plan.popular ? "text-primary-foreground" : "text-zinc-200"}`}
+                                    className={`w-full h-5 text-sm font-medium leading-tight ${plan.popular ? "dark:text-primary-foreground" : "dark:text-zinc-200"}`}
                                 >
                                     {plan.name}
                                     {plan.popular && (
@@ -128,7 +128,7 @@ export function PricingSection() {
                                 <div className="self-stretch flex flex-col justify-start items-start gap-1">
                                     <div className="flex justify-start items-center gap-1.5">
                                         <div
-                                            className={`relative h-10 flex items-center text-3xl font-medium leading-10 ${plan.popular ? "text-primary-foreground" : "text-zinc-50"}`}
+                                            className={`relative h-10 flex items-center text-3xl font-medium leading-10 ${plan.popular ? "dark:text-primary-foreground" : "dark:text-zinc-50"}`}
                                         >
                                             <span className="invisible">{isAnnual ? plan.annualPrice : plan.monthlyPrice}</span>
                                             <span
@@ -171,7 +171,7 @@ export function PricingSection() {
                         </div>
                         <div className="self-stretch flex flex-col justify-start items-start gap-4">
                             <div
-                                className={`self-stretch text-sm font-medium leading-tight ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+                                className={`self-stretch text-sm font-medium leading-tight ${plan.popular ? "dark:text-primary-foreground/70" : "dark:text-muted-foreground"}`}
                             >
                                 {plan.name === "Free" ? "Get Started today:" : "Everything in Free +"}
                             </div>
@@ -181,12 +181,12 @@ export function PricingSection() {
                                         <div className="w-4 h-4 flex items-center justify-center">
                                             <Icon
                                                 name="check"
-                                                className={`w-full h-full ${plan.popular ? "text-primary-foreground" : "text-muted-foreground"}`}
+                                                className={`w-full h-full ${plan.popular ? "dark:text-primary-foreground" : "dark:text-muted-foreground"}`}
                                                 strokeWidth={2}
                                             />
                                         </div>
                                         <div
-                                            className={`leading-tight font-normal text-sm text-left ${plan.popular ? "text-primary-foreground" : "text-muted-foreground"}`}
+                                            className={`leading-tight font-normal text-sm text-left ${plan.popular ? "dark:text-primary-foreground" : "dark:text-muted-foreground"}`}
                                         >
                                             {feature}
                                         </div>

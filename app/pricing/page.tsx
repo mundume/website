@@ -77,10 +77,10 @@ export default function Pro() {
     <section className="w-full px-5 py-12 md:py-20 flex flex-col justify-center items-center">
       <div className="w-full flex flex-col justify-center items-center gap-12 p-2">
         <div className="flex flex-col justify-center items-center gap-2">
-          <h2 id='detailed-comparison' className="text-center text-foreground text-4xl md:text-5xl font-semibold leading-tight">
+          <h2 id='detailed-comparison' className="text-center dark:text-foreground text-4xl md:text-5xl font-semibold leading-tight">
             Detailed Feature Comparison
           </h2>
-          <p className="text-center text-muted-foreground text-sm md:text-base font-medium leading-relaxed">
+          <p className="text-center dark:text-muted-foreground text-sm md:text-base font-medium leading-relaxed">
             See exactly what's included in each plan
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function Pro() {
                 <Fragment key={section.category}>
                   <tr >
                     <td colSpan={4} className="px-6 py-4 bg-accent/5 border-b border-border">
-                      <h3 className="text-sm font-semibold text-foreground">{section.category}</h3>
+                      <h3 className="text-sm font-semibold dark:text-foreground">{section.category}</h3>
                     </td>
                   </tr>
                   {section.features.map((feature, idx) => (
@@ -116,7 +116,7 @@ export default function Pro() {
                       key={feature.name}
                       className="border-b border-border hover:bg-muted/20 transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm text-foreground font-medium">
+                      <td className="px-6 py-4 text-sm dark:text-foreground font-medium">
                         {feature.name}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -128,10 +128,10 @@ export default function Pro() {
                               </div>
                             </div>
                           ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
+                            <span className="dark:text-muted-foreground text-sm">—</span>
                           )
                         ) : (
-                          <span className="text-sm text-foreground font-medium">{feature.free}</span>
+                          <span className="text-sm dark:text-foreground font-medium">{feature.free}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -143,10 +143,10 @@ export default function Pro() {
                               </div>
                             </div>
                           ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
+                            <span className="dark:text-muted-foreground text-sm">—</span>
                           )
                         ) : (
-                          <span className="text-sm text-foreground font-medium">{feature.pro}</span>
+                          <span className="text-sm dark:text-foreground font-medium">{feature.pro}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -158,10 +158,10 @@ export default function Pro() {
                               </div>
                             </div>
                           ) : (
-                            <span className="text-muted-foreground text-sm">—</span>
+                            <span className="dark:text-muted-foreground text-sm">—</span>
                           )
                         ) : (
-                          <span className="text-sm text-foreground font-medium">{feature.ultra}</span>
+                          <span className="text-sm dark:text-foreground font-medium">{feature.ultra}</span>
                         )}
                       </td>
                     </tr>
@@ -179,15 +179,15 @@ export default function Pro() {
     <section className="w-full px-5 py-12 md:py-20 flex flex-col justify-center items-center">
       <div className="max-w-2xl w-full flex flex-col justify-center items-center gap-8 p-8 md:p-12 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
         <div className="flex flex-col justify-center items-center gap-3">
-          <h2 className="text-center text-foreground text-3xl md:text-4xl font-semibold">
+          <h2 className="text-center dark:text-foreground text-3xl md:text-4xl font-semibold">
             Ready to get started?
           </h2>
-          <p className="text-center text-muted-foreground text-base md:text-lg">
+          <p className="text-center dark:text-muted-foreground text-base md:text-lg">
             Choose your plan and start building today. Upgrade or downgrade anytime.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full">
-          <a href='mailto:sales@apalis.dev' className="mx-auto px-6 py-3 rounded-md border border-border text-foreground font-semibold hover:bg-muted transition-colors">
+          <a href='mailto:sales@apalis.dev' className="mx-auto px-6 py-3 rounded-md border border-border dark:text-foreground font-semibold dark:hover:bg-muted transition-colors">
             Talk to Sales
           </a>
         </div>
