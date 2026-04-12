@@ -4,8 +4,9 @@ import CompatibleBackends from "./features/compatible-backends"
 import Middleware from "./features/middleware"
 import Observability from "./features/observability"
 import Workflows from "./features/workflows"
+import Link from "next/link"
 
-const FeatureCard = ({ title, description, Component }) => (
+const FeatureCard = ({ title, description, Component, href }) => (
     <div className="overflow-hidden rounded-md border border-white/20 flex flex-col justify-start items-start relative">
         <div
             className="absolute inset-0 rounded-md"
@@ -19,10 +20,10 @@ const FeatureCard = ({ title, description, Component }) => (
 
         <div className="self-stretch p-6 flex flex-col justify-start items-start gap-2 relative z-10">
             <div className="self-stretch flex flex-col justify-start items-start gap-1.5">
-                <p className="self-stretch text-foreground font-normal leading-7">
+                <Link href={href} className="self-stretch text-foreground font-normal leading-7">
                     {title} <br />
                     <span className="text-muted-foreground">{description}</span>
-                </p>
+                </Link>
             </div>
         </div>
         <div className="self-stretch h-72 relative -mt-0.5 z-10">
@@ -37,31 +38,37 @@ export function Features() {
             title: "Functional",
             description: "Functional programming approach with dependency injection with no macros.",
             Component: FunctionalApproach,
+            href: "/docs/guides/tasks/introduction"
         },
         {
             title: "Web-based UI",
             description: "Intuitive web interface for managing and monitoring background tasks.",
             Component: WebBasedUI,
+            href: "/docs/products/web-board"
         },
         {
             title: "Compatible with popular backends",
             description: "Easily connect your projects to databases and services.",
             Component: CompatibleBackends,
+            href: "/docs/introduction/architecture#the-backend"
         },
         {
             title: "Flexible Middleware",
             description: "Provides middleware support build on top of tower",
             Component: Middleware,
+            href: "/docs/guides/workers/middleware"
         },
         {
-            title: "Workflow Orchestration", 
+            title: "Workflow Orchestration",
             description: "Coordinate complex background tasks with ease.",
             Component: Workflows,
+            href: "/docs/guides/workflows"
         },
         {
             title: "Observability",
             description: "Gain insights into your background tasks with built-in instrumentation.",
             Component: Observability,
+            href: "/docs/integrations/tracing"
         },
     ]
 

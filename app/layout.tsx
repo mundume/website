@@ -36,9 +36,9 @@ const getURL = () => {
 
 
 export const metadata: Metadata = {
-  title: "Apalis - background task and message processing library for Rust",
+  title: "Apalis - background jobs, tasks and messages processing library for Rust",
   description:
-    "Simple, extensible multithreaded background task and message processing library for Rust",
+    "Simple, extensible multithreaded background jobs, tasks and messages processing library for Rust",
   openGraph: {
     images: `${getURL()}images/og.png`,
   },
