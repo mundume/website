@@ -70,14 +70,14 @@ async fn send_email(email: Email) {
     println!("Sending email to {:?}", email);
 }
 ```
-This defines an async function `send_email` — the task handler — which receives an `Email` message and performs the work associated with it.
+This defines an async function `send_email` — [the task handler](/docs/guides/tasks/introduction#async-function) — which receives an `Email` message and performs the work associated with it.
 The function returns a `Result<(), E>` where `E: StdError`.
 
 ### Setting Up a Worker
 
-With the task handler in place, we can now configure the worker that will fetch and execute these tasks.
+With the task handler in place, we can now configure the [worker](/docs/guides/workers/introduction) that will fetch and execute these tasks.
 
-A worker is responsible for polling the backend for tasks and executing them using the handler function.
+A worker is responsible for polling the [backend](/docs/guides/backend/introduction) for tasks and executing them using the handler function.
 
 ```rust name="worker" mode="inline"
 WorkerBuilder::new("email_worker")
@@ -96,7 +96,7 @@ The worker continuously polls the tasks, executing them as they become available
  
 ### Enqueue a Task
 
-With the worker and backend in place, you can now enqueue a message to be processed.
+With the worker and backend in place, you can now [enqueue a task](/docs/guides/backend/pushing-tasks) to be processed.
 
 In this example, we’ll push a task to the MemoryStorage-backed queue inside the same binary, right before the worker runs.
 

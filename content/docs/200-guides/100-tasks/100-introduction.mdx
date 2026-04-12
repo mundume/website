@@ -6,12 +6,12 @@ bottomNavigation: pagination
 ---
 
 Apalis provides flexible ways to define task handlers that process your background tasks. 
-You can pass in any type that implements [`IntoWorkerService`] such as:
+You can pass in any type that implements [`IntoWorkerService`](https://docs.rs/apalis-core/1.0.0-rc.7/apalis_core/worker/builder/trait.IntoWorkerService.html) such as:
 
 1. Async functions with dependency injection
-2. A type that implements `tower::Service` trait implementation.
-3. Workflow: Sequential workflows
-4. DagFlow: DAG workflows
+2. A type that implements [`tower::Service`]((https://docs.rs/tower-service/latest/tower_service/trait.Service.html)) trait implementation.
+3. Workflow: [Sequential workflows](/docs/guides/workflows/sequential-workflow)
+4. DagFlow: [DAG workflows](/docs/guides/workflows/dag-workflow)
 
 All workflows accept are a representation of multiple services which can accept async functions or tower services.
 We will discuss these with the knowledge that the same knowledge holds for workflows.
@@ -66,11 +66,11 @@ async fn complex_handler(
 
 ## Service trait
 
-For more advanced scenarios requiring fine-grained control over request processing, you can implement the `tower::Service` trait directly. This approach accepts `Request<Args, Context>` and provides maximum flexibility.
+For more advanced scenarios requiring fine-grained control over request processing, you can implement the [`tower::Service`](https://docs.rs/tower-service/latest/tower_service/trait.Service.html) trait directly. This approach accepts `Request<Args, Context>` and provides maximum flexibility.
 
 ### When to Use Tower Services
 
-Consider using `tower::Service` when you need:
+Consider using [`tower::Service`](https://docs.rs/tower-service/latest/tower_service/trait.Service.html) when you need:
 
 - Custom task preprocessing or validation
 - Complex error handling strategies  

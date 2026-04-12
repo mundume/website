@@ -53,6 +53,8 @@ Apalis can be used to build robust data pipelines that process large volumes of 
 
 Workers can process jobs concurrently, enabling efficient handling of high-throughput workloads.
 
+Learn more about [Sequential Workflows](/docs/guides/workflows/sequential-workflow) which provides durable and distributed pipelined processings
+
 ---
 
 ### Webhook Handling and Event Processing
@@ -78,6 +80,8 @@ Some operations are computationally expensive and should not block the main appl
 
 By offloading these tasks to workers, your application remains responsive and scalable.
 
+Learn more about [Parallelizing tasks](/docs/guides/workers/middleware#parallelize) and [Long Running Tasks](/docs/guides/workers/middleware#long-running-jobs).
+
 ---
 
 ### Task Orchestration and Workflows
@@ -89,6 +93,8 @@ Apalis can coordinate multi-step workflows where tasks depend on each other. Thi
 - Distributed job coordination  
 
 You can model workflows as a series of jobs, where each step enqueues the next, enabling flexible and composable pipelines.
+
+Learn more about [Sequential Workflows](/docs/guides/workflows/sequential-workflow) and [DAG Workflows](/docs/guides/workflows/dag-workflow).
 
 ---
 
@@ -102,6 +108,8 @@ Failures are inevitable in distributed systems. Apalis provides mechanisms to ha
 - Idempotent job design support  
 
 This ensures that your system remains robust even in the face of transient failures.
+
+See [Retries](/docs/guides/tasks/error-handling#retries) and [Catching Panics](/docs/guides/tasks/error-handling#catching-panics) for more.
 
 ---
 
