@@ -8,6 +8,8 @@ examples/target
 .yarn
 better-auth_migrations
 .yarnrc.yml
+.pnp.*
+.yarn/*
 
 # SQLite databases
 *.db

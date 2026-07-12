@@ -22,6 +22,7 @@ export const signUpWithEmail = async (email: string, password: string) => {
 export const signInWithGithub = async () => {
   return await authClient.signIn.social({
     provider: "github",
+    callbackURL: "/dashboard/apps",
   });
 };
 
