@@ -5,11 +5,13 @@ examples/target
 .env
 .env.local
 .env.production
-.yarn
-better-auth_migrations
-.yarnrc.yml
+
+# Yarn
 .pnp.*
 .yarn/*
+
+# Better Auth
+better-auth_migrations
 
 # SQLite databases
 *.db
