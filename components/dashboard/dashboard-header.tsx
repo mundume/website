@@ -14,7 +14,7 @@ export function DashboardHeader() {
   return (
     <header className="flex h-14 items-center bg-background">
       <div
-        className="flex h-full shrink-0 items-center gap-2 px-2 transition-[width] duration-200 ease-linear"
+        className="flex h-full shrink-0 items-center gap-2 px-2 transition-[width] duration-200 ease-[var(--ease-in-out)]"
         style={{ width: state === "collapsed" ? "var(--sidebar-width-icon)" : "var(--sidebar-width)" }}
       >
         <Avatar>

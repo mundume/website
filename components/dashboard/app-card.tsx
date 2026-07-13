@@ -39,7 +39,7 @@ export function AppCard({ app }: AppCardProps) {
 
   return (
     <Link href={`/dashboard/apps/${app.id}`} className="block group">
-      <Card className="rounded-xl border shadow-none transition-colors hover:bg-muted/30">
+      <Card className="rounded-xl border shadow-none transition-[background-color,transform,box-shadow] duration-200 ease-[var(--ease-out)] hover:-translate-y-0.5 hover:bg-muted/30 hover:shadow-md">
         <CardContent className="p-5">
           <div className="flex items-start justify-between">
             <div className="min-w-0">
