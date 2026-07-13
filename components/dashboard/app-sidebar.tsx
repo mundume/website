@@ -104,7 +104,6 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarHeaderDropdown
               name={name}
-              plan="Free"
               initials={initials}
             />
           </SidebarMenuItem>
