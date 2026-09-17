@@ -1,10 +1,11 @@
 "use client";
 
-import { CreditCardIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
+import { CreditCardIcon, DownloadIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PaystackCheckoutButton } from "@/components/dashboard/paystack-checkout-button";
 
 interface BillingActionsProps {
   invoiceId: string;
@@ -23,15 +24,7 @@ export function DownloadInvoiceButton({ invoiceId }: BillingActionsProps) {
 }
 
 export function ManageSubscriptionButton() {
-  return (
-    <Button
-      variant="outline"
-      onClick={() => toast.info("Opening customer portal...")}
-    >
-      <ExternalLinkIcon className="size-4" />
-      Manage Subscription
-    </Button>
-  );
+  return <PaystackCheckoutButton />;
 }
 
 export function UpdateCardButton() {

@@ -19,22 +19,29 @@ import {
   CreditCardIcon,
   DownloadInvoiceButton,
   ManageSubscriptionButton,
-  UpdateCardButton,
 } from "@/components/dashboard/billing-actions";
+import { auth } from "@/lib/auth";
+import { getBillingSummary } from "@/lib/billing/store";
+import { headers } from "next/headers";
 
-const invoices = [
-  { id: "INV-2026-007", date: "Jul 1, 2026", amount: 999.0 },
-  { id: "INV-2026-006", date: "Jun 1, 2026", amount: 999.0 },
-  { id: "INV-2026-005", date: "May 1, 2026", amount: 999.0 },
-];
+export const runtime = "nodejs";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const { subscription, transactions } = session?.user
+    ? getBillingSummary(session.user.id)
+    : { subscription: undefined, transactions: [] };
+  const activeSubscription = subscription?.status === "active" ? subscription : undefined;
+  const amount = transactions[0]?.amount;
+  const interval = activeSubscription?.interval === "annually" ? "year" : "month";
+  const invoiceCount = transactions.length;
+
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Billing</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your subscription, payment method and invoices.
+          Manage your KES subscription, payment method and invoices.
         </p>
       </div>
 
@@ -44,21 +51,25 @@ export default function Page() {
         <Card size="sm">
           <CardHeader>
             <CardDescription>Current Plan</CardDescription>
-            <CardTitle className="text-2xl">Pro</CardTitle>
+            <CardTitle className="text-2xl">{activeSubscription?.plan ?? "Free"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <Badge>Active</Badge>
+            <Badge variant={activeSubscription ? "success" : "secondary"}>
+              {activeSubscription ? "Active" : "No active plan"}
+            </Badge>
           </CardContent>
         </Card>
 
         <Card size="sm">
           <CardHeader>
             <CardDescription>Monthly Spend</CardDescription>
-            <CardTitle className="text-2xl">$99</CardTitle>
+            <CardTitle className="text-2xl">
+              {activeSubscription && amount ? `KES ${(amount / 100).toFixed(2)}` : "—"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Renews on Aug 1, 2026
+              {activeSubscription ? `Billed per ${interval}` : "Upgrade to unlock Pro"}
             </p>
           </CardContent>
         </Card>
@@ -66,11 +77,11 @@ export default function Page() {
         <Card size="sm">
           <CardHeader>
             <CardDescription>Invoices</CardDescription>
-            <CardTitle className="text-2xl">{invoices.length}</CardTitle>
+          <CardTitle className="text-2xl">{invoiceCount}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Available for download
+              Verified payments
             </p>
           </CardContent>
         </Card>
@@ -87,46 +98,53 @@ export default function Page() {
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="font-medium">Plan</p>
-              <p className="text-sm text-muted-foreground">Pro</p>
+              <p className="text-sm text-muted-foreground">
+                {activeSubscription?.plan ?? "Free"}
+              </p>
             </div>
-            <Badge>Active</Badge>
+            <Badge variant={activeSubscription ? "success" : "secondary"}>
+              {activeSubscription ? "Active" : "Inactive"}
+            </Badge>
           </div>
 
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="font-medium">Billing cycle</p>
-              <p className="text-sm text-muted-foreground">Monthly</p>
+              <p className="text-sm text-muted-foreground">
+                {activeSubscription?.interval === "annually" ? "Annual" : "Monthly"}
+              </p>
             </div>
-            <span className="font-medium">$99/month</span>
+            <span className="font-medium">
+              {activeSubscription && amount ? `KES ${(amount / 100).toFixed(2)}/${interval}` : "—"}
+            </span>
           </div>
 
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="font-medium">Next invoice</p>
-              <p className="text-sm text-muted-foreground">Aug 1, 2026</p>
+              <p className="text-sm text-muted-foreground">
+                {activeSubscription ? "Managed through Paystack" : "Start a Pro subscription"}
+              </p>
             </div>
             <ManageSubscriptionButton />
           </div>
         </CardContent>
       </Card>
 
-      {/* Payment Method */}
-
       <Card>
         <CardHeader>
           <CardTitle>Payment Method</CardTitle>
-          <CardDescription>Your default payment method.</CardDescription>
+          <CardDescription>Payments are securely handled by Paystack.</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
               <CreditCardIcon className="size-5 text-muted-foreground" />
               <div>
-                <p className="font-medium">Visa ending in 4242</p>
-                <p className="text-sm text-muted-foreground">Expires 08/2028</p>
+                <p className="font-medium">Managed by Paystack</p>
+                <p className="text-sm text-muted-foreground">No card data is stored by Apalis.</p>
               </div>
             </div>
-            <UpdateCardButton />
           </div>
         </CardContent>
       </Card>
@@ -162,22 +180,30 @@ export default function Page() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
+                {transactions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center text-sm text-muted-foreground">
+                      No verified payments yet.
+                    </TableCell>
+                  </TableRow>
+                ) : transactions.map((transaction) => (
+                  <TableRow key={transaction.reference}>
                     <TableCell className="px-6 py-4">
-                      <p className="font-mono text-sm">{invoice.id}</p>
+                      <p className="font-mono text-sm">{transaction.reference}</p>
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-muted-foreground">
-                      {invoice.date}
+                      {transaction.paidAt
+                        ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(transaction.paidAt))
+                        : "—"}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm font-medium">
-                      ${invoice.amount.toFixed(2)}
+                      {transaction.currency} {(transaction.amount / 100).toFixed(2)}
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       <Badge variant="success">Paid</Badge>
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      <DownloadInvoiceButton invoiceId={invoice.id} />
+                      <DownloadInvoiceButton invoiceId={transaction.reference} />
                     </TableCell>
                   </TableRow>
                 ))}
