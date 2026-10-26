@@ -220,16 +220,13 @@ export function TicketsTable({ tickets, apps }: TicketsTableProps) {
                   </button>
                 </TableHead>
               ))}
-              <TableHead className="text-right text-xs font-normal text-muted-foreground">
-                Created
-              </TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {paged.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                   No tickets found.
                 </TableCell>
               </TableRow>
@@ -289,14 +286,14 @@ export function TicketsTable({ tickets, apps }: TicketsTableProps) {
                     </TableCell>
 
                     <TableCell>
-                      <Badge variant={priorityVariant[ticket.priority]}>
-                        {ticket.priority}
+                      <Badge variant={statusVariant[ticket.status]}>
+                        {ticket.status.replace("_", " ")}
                       </Badge>
                     </TableCell>
 
                     <TableCell>
-                      <Badge variant={statusVariant[ticket.status]}>
-                        {ticket.status.replace("_", " ")}
+                      <Badge variant={priorityVariant[ticket.priority]}>
+                        {ticket.priority}
                       </Badge>
                     </TableCell>
 

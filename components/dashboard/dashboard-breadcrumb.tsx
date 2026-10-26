@@ -15,7 +15,7 @@ const segmentLabels: Record<string, string> = {
   tickets: "Tickets",
   settings: "Settings",
   billing: "Billing",
-  "api-key": "API Key",
+  "api-keys": "API Keys",
   new: "New",
 };
 

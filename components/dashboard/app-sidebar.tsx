@@ -8,8 +8,8 @@ import {
   WalletIcon,
   SlidersHorizontalIcon,
 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-import { useSession } from "@/lib/auth/auth-client";
 import {
   Sidebar,
   SidebarContent,
@@ -74,14 +74,12 @@ function getInitials(name: string) {
 
 export function AppSidebar() {
   const pathname = usePathname() ?? "";
-  const { data: session } = useSession();
+  const { user } = useUser();
 
-  const user = session?.user;
-
-  const name = user?.name ?? "—";
-  const email = user?.email ?? "—";
-  const image = user?.image ?? undefined;
-  const initials = user ? getInitials(user.name) : "—";
+  const name = user?.fullName ?? user?.username ?? "—";
+  const email = user?.primaryEmailAddress?.emailAddress ?? "—";
+  const image = user?.imageUrl ?? undefined;
+  const initials = user ? getInitials(name) : "—";
 
   return (
     <Sidebar

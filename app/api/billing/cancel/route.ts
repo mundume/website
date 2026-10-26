@@ -1,20 +1,19 @@
-import { headers } from "next/headers";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
 import { disableSubscription } from "@/lib/billing/paystack";
 import { getBillingSummary, updateSubscriptionStatus } from "@/lib/billing/store";
 
 export const runtime = "nodejs";
 
 export async function POST() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const { userId } = await auth();
 
-  if (!session?.user) {
+  if (!userId) {
     return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
   }
 
-  const { subscription } = getBillingSummary(session.user.id);
+  const { subscription } = getBillingSummary(userId);
 
   if (!subscription || subscription.status !== "active") {
     return NextResponse.json({ error: "There is no active subscription to cancel." }, { status: 400 });
@@ -32,7 +31,7 @@ export async function POST() {
       subscriptionCode: subscription.paystackSubscriptionCode,
       emailToken: subscription.paystackEmailToken,
     });
-    updateSubscriptionStatus(session.user.id, "non-renewing");
+    updateSubscriptionStatus(userId, "non-renewing");
 
     return NextResponse.json({ status: "non-renewing" });
   } catch (error) {

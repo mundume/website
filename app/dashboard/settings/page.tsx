@@ -1,13 +1,6 @@
-import { headers } from "next/headers";
-
-import { auth } from "@/lib/auth";
 import { SettingsContent } from "@/components/dashboard/settings-content";
 
-export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+export default function Page() {
   return (
     <div className="space-y-6">
       <div>
@@ -17,10 +10,7 @@ export default async function Page() {
         </p>
       </div>
 
-      <SettingsContent
-        initialName={session?.user?.name ?? ""}
-        initialEmail={session?.user?.email ?? ""}
-      />
+      <SettingsContent />
     </div>
   );
 }

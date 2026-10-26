@@ -10,9 +10,6 @@ examples/target
 .pnp.*
 .yarn/*
 
-# Better Auth
-better-auth_migrations
-
 # SQLite databases
 *.db
 *.db-journal

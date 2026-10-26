@@ -1,8 +1,7 @@
-import { headers } from "next/headers";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { auth } from "@/lib/auth";
 import {
   initializeProSubscription,
   type BillingInterval,
@@ -15,12 +14,22 @@ const checkoutSchema = z.object({
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const { userId } = await auth();
 
-  if (!session?.user?.email) {
+  if (!userId) {
     return NextResponse.json(
       { error: "Please sign in to continue." },
       { status: 401 }
+    );
+  }
+
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress;
+
+  if (!email) {
+    return NextResponse.json(
+      { error: "Please add an email address to your account." },
+      { status: 400 }
     );
   }
 
@@ -37,8 +46,8 @@ export async function POST(request: Request) {
 
   try {
     const transaction = await initializeProSubscription({
-      email: session.user.email,
-      userId: session.user.id,
+      email,
+      userId,
       interval: parsedCheckoutResponse.data.interval as BillingInterval,
     });
 

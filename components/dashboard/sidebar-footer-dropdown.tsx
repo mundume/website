@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useClerk } from "@clerk/nextjs";
 import {
   BookOpenIcon,
   CreditCardIcon,
@@ -16,8 +17,6 @@ import {
   SettingsIcon,
   SunIcon,
 } from "lucide-react";
-
-import { signOut } from "@/lib/auth/auth-client";
 
 import {
   DropdownMenu,
@@ -69,6 +68,7 @@ export function SidebarFooterDropdown({
   initials,
 }: SidebarFooterDropdownProps) {
   const router = useRouter();
+  const { signOut } = useClerk();
 
   const { theme, setTheme } = useTheme();
 

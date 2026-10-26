@@ -1,3 +1,6 @@
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -20,17 +23,19 @@ import {
   DownloadInvoiceButton,
   ManageSubscriptionButton,
 } from "@/components/dashboard/billing-actions";
-import { auth } from "@/lib/auth";
 import { getBillingSummary } from "@/lib/billing/store";
-import { headers } from "next/headers";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  const { subscription, transactions } = session?.user
-    ? getBillingSummary(session.user.id)
-    : { subscription: undefined, transactions: [] };
+  const { userId } = await auth();
+
+  if (!userId) {
+    redirect("/login");
+  }
+
+  const { subscription, transactions } = getBillingSummary(userId);
   const activeSubscription =
     subscription?.status === "active" || subscription?.status === "non-renewing"
       ? subscription

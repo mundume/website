@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { headers } from "next/headers";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth";
 import { validateProPayment, verifyTransaction } from "@/lib/billing/paystack";
 import { recordSuccessfulPayment } from "@/lib/billing/store";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,9 @@ export default async function BillingCallbackPage({
 }: {
   searchParams: Promise<{ reference?: string }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const { userId } = await auth();
 
-  if (!session) redirect("/login");
+  if (!userId) redirect("/login");
 
   const { reference } = await searchParams;
   let isPaid = false;
@@ -23,14 +22,14 @@ export default async function BillingCallbackPage({
   if (reference && /^[A-Za-z0-9._-]+$/.test(reference)) {
     try {
       const transaction = await verifyTransaction(reference);
-      const belongsToUser = transaction.metadata?.userId === session.user.id;
+      const belongsToUser = transaction.metadata?.userId === userId;
       const interval = transaction.metadata?.interval === "annually" ? "annually" : "monthly";
 
       isPaid = belongsToUser && (await validateProPayment(transaction, interval));
       if (isPaid) {
         recordSuccessfulPayment({
           reference: transaction.reference,
-          userId: session.user.id,
+          userId,
           amount: transaction.amount,
           currency: transaction.currency,
           paidAt: transaction.paid_at,
