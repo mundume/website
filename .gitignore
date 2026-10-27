@@ -14,3 +14,7 @@ examples/target
 *.db
 *.db-journal
 sqlite.db
+
+# CJS files
+.tmp*
+.tmp-2fa-test.cjs

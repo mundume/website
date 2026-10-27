@@ -4252,6 +4252,7 @@ __metadata:
     postcss: "npm:^8.4.24"
     postcss-import: "npm:^16.1.0"
     puppeteer: "npm:^24.15.0"
+    qrcode.react: "npm:^4.2.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     react-hook-form: "npm:^7.81.0"
@@ -10798,6 +10799,15 @@ __metadata:
   bin:
     puppeteer: lib/cjs/puppeteer/node/cli.js
   checksum: 10c0/fc5556ec2102ce322f4b3b4d0f2f527ced68104ffcd530b619ea4332d468fec31b87632794b8371f242b598243b3cfe1463ae44b016ca9e2af7c009e0d5a3f1c
+  languageName: node
+  linkType: hard
+
+"qrcode.react@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "qrcode.react@npm:4.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/68c691d130e5fda2f57cee505ed7aea840e7d02033100687b764601f9595e1116e34c13876628a93e1a5c2b85e4efc27d30b2fda72e2050c02f3e1c4e998d248
   languageName: node
   linkType: hard
 
